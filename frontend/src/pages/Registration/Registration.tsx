@@ -1,13 +1,13 @@
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { ACTION_TYPE } from '../action/action-type';
-import { Button } from '../components';
+import { useNavigate, Link } from 'react-router-dom';
+import { ACTION_TYPE, setUser } from '../../action';
+import { Button } from '../../components/Button/Button';
 
-const authFormSchema = yup.object().shape({
+const regFormSchema = yup.object().shape({
 	login: yup
 		.string()
 		.required('Заполните логин')
@@ -18,28 +18,29 @@ const authFormSchema = yup.object().shape({
 	password: yup
 		.string()
 		.required('Заполните пароль')
-		.matches(
-			/^[\w#%]+$/,
-			'Неверно заполнен пароль. Допускаются буквы, цифры, знаки # %',
-		)
+		.matches(/^[\w#%]+$/)
 		.min(6, 'Неверно заполнен пароль. Минимум 6 символов')
 		.max(30, 'Неверно заполнен пароль. Максимум 30 символов'),
+
+	passcheck: yup
+		.string()
+		.required('Заполните повтор пароля')
+		.oneOf([yup.ref('password')], 'Повтор пароля не совпадает'),
 });
 
-export const LoginPage = () => {
+export const Registration = () => {
 	const {
 		register,
-		reset,
 		handleSubmit,
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
 			login: '',
 			password: '',
+			passcheck: '',
 		},
-		resolver: yupResolver(authFormSchema),
+		resolver: yupResolver(regFormSchema),
 	});
-
 	const [loading, setLoading] = useState(false);
 	const [serverError, setServerError] = useState<string | null>(null);
 	const formError = errors?.login?.message || errors?.password?.message;
@@ -53,7 +54,7 @@ export const LoginPage = () => {
 		setServerError(null);
 
 		try {
-			const response = await fetch('/api/auth/login', {
+			const response = await fetch('/api/auth/register', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -64,11 +65,8 @@ export const LoginPage = () => {
 			const data = await response.json();
 
 			if (response.ok) {
-				dispatch({
-					type: ACTION_TYPE.SET_USER,
-					payload: data.user,
-				});
-				navigate('/dashboard');
+				dispatch(setUser(data.user));
+				navigate('/');
 			} else {
 				setServerError(data.error || 'Login failed');
 			}
@@ -80,13 +78,13 @@ export const LoginPage = () => {
 	};
 
 	return (
-		<div className="bg-gray-100 min-h-screen flex justify-center items-center">
+		<div className="min-h-screen flex justify-center items-baseline">
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				className="bg-white w-full max-w-md rounded-md shadow-xl p-6 space-y-6 "
 			>
 				<h4 className="text-xl font-semibold text-center text-gray-800">
-					Sign in to your account
+					Registration
 				</h4>
 
 				<label className="block">
@@ -94,7 +92,7 @@ export const LoginPage = () => {
 					<input
 						type="text"
 						placeholder="Enter your login"
-						{...register('login')}
+						{...register('login', { onChange: () => setServerError(null) })}
 						className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 					/>
 				</label>
@@ -103,8 +101,22 @@ export const LoginPage = () => {
 					<span className="text-sm font-normal text-gray-700">Password</span>
 					<input
 						type="password"
-						{...register('password')}
+						{...register('password', {
+							onChange: () => setServerError(null),
+						})}
 						placeholder="Enter your password"
+						className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-800 placeholder-gray-40 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+					/>
+				</label>
+
+				<label className="block">
+					<span className="text-sm font-normal text-gray-700">Passcheck</span>
+					<input
+						type="password"
+						{...register('passcheck', {
+							onChange: () => setServerError(null),
+						})}
+						placeholder="Enter your passcheck"
 						className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-800 placeholder-gray-40 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 					/>
 				</label>
@@ -114,14 +126,8 @@ export const LoginPage = () => {
 					disabled={loading}
 					className="w-full rounded-md font-semibold hover:bg-blue-600 hover:shadow-md active:bg-blue-700"
 				>
-					{loading ? 'Signing in...' : 'Sign in'}
+					{loading ? 'Registering...' : 'Register'}
 				</Button>
-				<Link
-					to="/register"
-					className="block w-full text-center text-base text-blue-600 hover:text-blue-500 hover:underline"
-				>
-					Register
-				</Link>
 
 				{errorMessage && (
 					<p className="text-sm text-red-700 text-center">{errorMessage}</p>
