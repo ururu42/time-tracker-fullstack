@@ -3,3 +3,6 @@ export * from './Header/Header';
 export * from './UserPanel/UserPanel';
 export * from './PageLayout/PageLayout';
 export * from './Main/Main';
+export * from './Input/Input';
+export * from './H1/H1';
+export * from './P/P';

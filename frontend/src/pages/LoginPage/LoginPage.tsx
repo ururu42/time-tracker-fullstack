@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { ACTION_TYPE, setUser } from '../../action';
+import { setUser } from '../../action';
 import { Button } from '../../components';
 
 const authFormSchema = yup.object().shape({

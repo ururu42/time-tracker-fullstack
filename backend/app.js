@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const express = require("express");
+const path = require("path");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const routes = require("./routes");
@@ -13,6 +14,7 @@ app.use(express.static("../frontend/dist"));
 app.use(cookieParser());
 app.use(express.json());
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api", routes);
 
 mongoose

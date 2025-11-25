@@ -1,17 +1,16 @@
 import { ACTION_TYPE } from '../action';
 
-
 const initialUserState = {
-  id: null,
-  login: null,
-  name: null,
-  avatar: null,
-  role: null,
-  settings: {
-    timezone: "Europe/Chisinau", // Default timezone
-  },
-  createdAt: null,
-  updatedAt: null,
+	id: null,
+	login: null,
+	name: null,
+	avatar: null,
+	role: null,
+	settings: {
+		timezone: 'Europe/Chisinau', // Default timezone
+	},
+	createdAt: null,
+	updatedAt: null,
 };
 export const userReducer = (state = initialUserState, action) => {
 	switch (action.type) {
@@ -23,6 +22,11 @@ export const userReducer = (state = initialUserState, action) => {
 		case ACTION_TYPE.LOGOUT:
 			return initialUserState;
 
+		case ACTION_TYPE.UPDATE_USER:
+			return {
+				...state,
+				...action.payload,
+			};
 		default:
 			return state;
 	}

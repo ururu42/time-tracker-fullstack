@@ -45,28 +45,73 @@ async function getUserById(id) {
   return await User.findById(id).select("-password");
 }
 
+// async function updateUserById(id, data = {}) {
+//   const allowedFields = ["name", "avatar", "login"];
+//   const updateData = {};
+
+//   for (const field of allowedFields) {
+//     if (data[field] !== undefined) {
+//       updateData[field] = data[field];
+//     }
+//   }
+
+//   if (typeof data.settings === "object" && data.settings !== undefined) {
+//     for (const key in data.settings) {
+//       updateData[`settings.${key}`] = data.settings[key];
+//     }
+//   }
+
+//   const updatedUser = await User.findByIdAndUpdate(id, updateData, {
+//     new: true,
+//     runValidators: true,
+//   });
+
+//   return updatedUser;
+// }
+
 async function updateUserById(id, data = {}) {
-  const allowedFields = ["name", "avatar"];
-  const updateData = {};
+  try {
+    console.log("Обновление пользователя с ID:", id);
+    console.log("Данные для обновления:", data);
 
-  for (const field of allowedFields) {
-    if (data[field] !== undefined) {
-      updateData[field] = data[field];
+    const allowedFields = ["name", "avatar", "login"];
+    const updateData = {};
+
+    for (const field of allowedFields) {
+      if (data[field] !== undefined) {
+        // Проверяем, если обновляется логин, то он должен быть уникальным
+        if (field === "login") {
+          const existingUser = await User.findOne({
+            login: data[field],
+            _id: { $ne: id },
+          });
+          if (existingUser) {
+            throw new Error("This login is already in use");
+          }
+        }
+        updateData[field] = data[field];
+      }
     }
-  }
 
-  if (typeof data.settings === "object" && data.settings !== undefined) {
-    for (const key in data.settings) {
-      updateData[`settings.${key}`] = data.settings[key];
+    if (typeof data.settings === "object" && data.settings !== undefined) {
+      for (const key in data.settings) {
+        updateData[`settings.${key}`] = data.settings[key];
+      }
     }
+
+    console.log("Данные для обновления в базе:", updateData);
+
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
+    console.log("Результат обновления:", updatedUser);
+    return updatedUser;
+  } catch (error) {
+    console.error("Ошибка при обновлении пользователя:", error);
+    throw error;
   }
-
-  const updatedUser = await User.findByIdAndUpdate(id, updateData, {
-    new: true,
-    runValidators: true,
-  });
-
-  return updatedUser;
 }
 
 async function deleteUser(id) {

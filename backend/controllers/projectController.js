@@ -1,10 +1,22 @@
 const Project = require("../models/Projects");
 
-async function getProjects(userId) {
-  const projects = await Project.find({ owner: userId }).sort({
-    createdAt: -1,
-  });
-  return projects;
+async function getProjects(userId, search = "", limit = 5, page = 1) {
+  const searchCondition = { owner: userId };
+
+  if (search) {
+    searchCondition.title = { $regex: search, $options: "i" };
+  }
+
+  const [projects, count] = await Promise.all([
+    Project.find(searchCondition)
+      .limit(limit)
+      .skip((page - 1) * limit)
+      .sort({
+        createdAt: -1,
+      }),
+    Project.countDocuments(searchCondition),
+  ]);
+  return { projects, lastPage: Math.ceil(count / limit) };
 }
 
 async function getProjectById(userId, projectId) {

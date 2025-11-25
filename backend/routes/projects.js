@@ -13,8 +13,12 @@ router.use(authenticated);
 
 router.get("/", async (req, res) => {
   try {
-    const projects = await getProjects(req.user._id);
-    res.send({ data: projects });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || "";
+
+    const result = await getProjects(req.user._id, search, limit, page);
+    res.send(result);
   } catch (e) {
     res.status(500).send({ error: e.message || "Server error" });
   }
