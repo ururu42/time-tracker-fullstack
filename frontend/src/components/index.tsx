@@ -6,3 +6,5 @@ export * from './Main/Main';
 export * from './Input/Input';
 export * from './H1/H1';
 export * from './P/P';
+export * from './DropDown/DropDown';
+export * from './Timer/Timer';

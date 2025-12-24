@@ -34,7 +34,6 @@ export const ProjectsPage = () => {
 	const onSearch = ({ target }) => {
 		setSearchPhrase(target.value);
 		startDelayedSearch(!shouldSearch);
-
 	};
 
 	return (
