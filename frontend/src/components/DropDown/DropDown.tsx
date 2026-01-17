@@ -1,19 +1,41 @@
 import { useState } from 'react';
 
-export const DropDown = ({ projects }) => {
-	const [selectedOption, setSelectedOption] = useState('');
+interface Option {
+	value: string;
+	label: string;
+}
 
-	const handleChange = ({ target }) => {
-		console.log(target.value);
-		setSelectedOption(target.value); // обновляем состояние при выборе
+interface DropDownProps {
+	options: Option[];
+	value: string;
+	onChange: (value: string) => void;
+	placeholder?: string;
+	disabled?: boolean;
+}
+
+export const DropDown = ({
+	options = [],
+	value,
+	onChange,
+	placeholder = 'Select an option',
+	disabled = false,
+}: DropDownProps) => {
+	const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		onChange(e.target.value);
 	};
+
 	return (
-		<div>
-			<select id="projects" value={selectedOption} onChange={handleChange}>
-				<option value="">Выберите проект</option>
-				{projects.map((project) => (
-					<option key={project._id} value={project.title}>
-						{project.title}
+		<div className="w-full">
+			<select
+				value={value}
+				onChange={handleChange}
+				disabled={disabled}
+				className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all"
+			>
+				<option value="">{placeholder}</option>
+				{options.map((option) => (
+					<option key={option.value} value={option.value}>
+						{option.label}
 					</option>
 				))}
 			</select>

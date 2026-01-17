@@ -13,56 +13,75 @@ export const SettingsPage = () => {
 	const handlerEditUser = () => {
 		setIsEdit(true);
 	};
-	console.log(user);
+
 	return (
-		<>
-			{isEdit ? (
-				<EditSettingsPage user={user} setIsEdit={setIsEdit} />
-			) : (
-				<div className="max-w-4xl mx-auto p-6">
-					<H1>Настройки аккаунта {userLogin}</H1>
-					<div className="flex mt-6">
-						<div className="flex-shrink-0">
-							<img
-								src={user.avatar || avatar}
-								alt="Avatar"
-								className="w-70 h-100 rounded object-cover border border-gray-500 shadow-xl"
-							/>
-						</div>
-						<div className="ml-8 flex-1">
-							<div className="bg-gray-50 p-6 rounded-lg shadow-sm">
-								<P className="font-semibold text-gray-900">
-									Login:{' '}
-									<span className="font-normal text-gray-700">
-										{user.login}
-									</span>
-								</P>
-								<P className="font-semibold text-gray-900">
-									Имя пользователя:{' '}
-									{user.name === '' ? (
-										'отсутствует'
-									) : (
-										<span className="font-normal text-gray-700">
-											{user.name}
-										</span>
-									)}
-								</P>
-								<P className="font-semibold text-gray-900">
-									Дата создания аккаунта:{' '}
-									<span className="font-normal text-gray-700">
-										{new Date(user.createdAt).toLocaleDateString(
-											'ru-RU',
-										)}
-									</span>
-								</P>
+		<div>
+			<div className="max-w-6xl mx-auto">
+				<div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-8 text-white rounded-t-2xl">
+					<h1 className="text-4xl font-bold">Настройки аккаунта</h1>
+					<p className="opacity-90 mt-2">{userLogin}</p>
+				</div>
+
+				<div className="p-8 bg-white rounded-b-2xl shadow-md">
+					{isEdit ? (
+						<EditSettingsPage user={user} setIsEdit={setIsEdit} />
+					) : (
+						<div>
+							<div className="flex flex-col md:flex-row gap-8 mb-8">
+								<div className="flex-shrink-0">
+									<img
+										src={user.avatar || avatar}
+										alt="Avatar"
+										className="w-64 h-64 rounded-xl object-cover border-4 border-white shadow-lg"
+									/>
+								</div>
+
+								<div className="flex-1 bg-gray-50 p-6 rounded-xl shadow-sm">
+									<div className="space-y-4">
+										<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+											<span className="font-semibold text-gray-700">
+												Login:
+											</span>
+											<span className="font-medium text-gray-900">
+												{user.login}
+											</span>
+										</div>
+
+										<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+											<span className="font-semibold text-gray-700">
+												Имя пользователя:
+											</span>
+											<span className="font-medium text-gray-900">
+												{user.name || 'отсутствует'}
+											</span>
+										</div>
+
+										<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+											<span className="font-semibold text-gray-700">
+												Дата создания аккаунта:
+											</span>
+											<span className="font-medium text-gray-900">
+												{new Date(
+													user.createdAt,
+												).toLocaleDateString('ru-RU')}
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div className="flex justify-center">
+								<Button
+									onClick={handlerEditUser}
+									className="px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow transition-all duration-200 font-medium"
+								>
+									Редактировать данные пользователя
+								</Button>
 							</div>
 						</div>
-					</div>
-					<Button onClick={handlerEditUser}>
-						Редактировать данные пользователя
-					</Button>
+					)}
 				</div>
-			)}
-		</>
+			</div>
+		</div>
 	);
 };

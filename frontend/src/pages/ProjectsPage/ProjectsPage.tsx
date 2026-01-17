@@ -1,3 +1,4 @@
+//
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProjects } from '../../selectors';
@@ -6,6 +7,9 @@ import { Pagination, Header, ProjectList } from './components';
 import { Search } from './components/Search/Search';
 import { PAGINATION_LIMIT } from '../../constants';
 import { debounce } from './utils';
+import { Button } from '../../components';
+import { AddProjectForm } from './components/Header/AddProjectForm/AddProjectForm';
+import { Link } from 'react-router-dom';
 
 export const ProjectsPage = () => {
 	const [page, setPage] = useState(1);
@@ -19,7 +23,7 @@ export const ProjectsPage = () => {
 		const fetchProjectsWithLastPage = async () => {
 			const returnedLastPage = await dispatch(
 				fetchProjects(page, PAGINATION_LIMIT, searchPhrase) as any,
-			); // Временное решение для типизации
+			);
 
 			if (returnedLastPage !== undefined) {
 				setLastPage(returnedLastPage);
@@ -38,10 +42,33 @@ export const ProjectsPage = () => {
 
 	return (
 		<div>
-			<Header />
-			<Search onChange={onSearch} searchPhrase={searchPhrase} />
-			<ProjectList projects={projects} />
-			<Pagination setPage={setPage} page={page} lastPage={lastPage} />
+			<div className="max-w-6xl mx-auto">
+				<div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-8 text-white rounded-t-2xl">
+					<h1 className="text-4xl font-bold">Проекты</h1>
+					<p className="opacity-90 mt-2">Управление вашими проектами</p>
+				</div>
+
+				<div className="p-8 bg-white rounded-b-2xl shadow-md">
+					<Link to="/projects/create">
+						<Button className="bg-gradient-to-r from-green-500 to-green-600 mb-6">
+							{' '}
+							+ Добавить проект
+						</Button>
+					</Link>
+
+					<div className="mb-8">
+						<Search onChange={onSearch} searchPhrase={searchPhrase} />
+					</div>
+
+					<div className="mb-8">
+						<ProjectList projects={projects} />
+					</div>
+
+					<div className="flex justify-center">
+						<Pagination setPage={setPage} page={page} lastPage={lastPage} />
+					</div>
+				</div>
+			</div>
 		</div>
 	);
 };

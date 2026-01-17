@@ -8,3 +8,4 @@ export * from './H1/H1';
 export * from './P/P';
 export * from './DropDown/DropDown';
 export * from './Timer/Timer';
+export * from './Textarea/Textarea';

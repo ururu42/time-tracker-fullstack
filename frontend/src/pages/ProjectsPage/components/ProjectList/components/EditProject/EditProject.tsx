@@ -1,23 +1,38 @@
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../../../../../store';
 import { Input, Button } from '../../../../../../components';
 import { updateProjectAsync } from '../../../../../../action/update-project-async';
+import { Project } from '../../../../../../models/Project';
 
-export const EditProject = ({ project, setEditingProjectId, setEditForm, editForm }) => {
-	const dispatch = useDispatch();
+interface EditProjectProps {
+	project: Project;
+	setEditingProjectId: (id: string | null) => void;
+	setEditForm: React.Dispatch<
+		React.SetStateAction<{ title: string; description: string }>
+	>;
+	editForm: { title: string; description: string };
+}
 
-	const handleInputChange = ({ target }) => {
+export const EditProject = ({
+	project,
+	setEditingProjectId,
+	setEditForm,
+	editForm,
+}: EditProjectProps) => {
+	const dispatch = useAppDispatch();
+
+	const handleInputChange = ({
+		target,
+	}: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		console.log(target.name, target.value);
 		const { name, value } = target;
 
-		setEditForm((prev) => {
-			return {
-				...prev,
-				[name]: value,
-			};
-		});
+		setEditForm((prev) => ({
+			...prev,
+			[name]: value,
+		}));
 	};
 
-	const saveEdit = (projectId) => {
+	const saveEdit = (projectId: string) => {
 		dispatch(updateProjectAsync(projectId, editForm));
 		setEditingProjectId(null);
 	};
@@ -46,13 +61,15 @@ export const EditProject = ({ project, setEditingProjectId, setEditForm, editFor
 				<div className="flex justify-between">
 					<Button
 						className="mt-2.5 w-32 bg-green-600 hover:bg-green-700"
-						onClick={() => saveEdit(project._id)}
+						onClick={() => saveEdit(project.id)}
+						disabled={false}
 					>
 						Save
 					</Button>
 					<Button
-						className="mt-2.5 w-32 bg-red-500 hover:bg-red-600 "
+						className="mt-2.5 w-32 bg-red-500 hover:bg-red-600"
 						onClick={cancelEdit}
+						disabled={false}
 					>
 						Cancel
 					</Button>

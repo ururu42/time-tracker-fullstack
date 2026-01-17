@@ -1,12 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectUserLogin } from '../../selectors';
+import { selectUserLogin, selectUser } from '../../selectors';
 import { logout } from '../../action';
 import { Icon } from '@iconify/react';
 import { Button } from '../Button/Button';
+import avatar from '../../img-test/8e09097b-66c5-4bac-83a2-02779c3c1f4e.jpeg';
 
 export const UserPanel = () => {
 	const userLogin = useSelector(selectUserLogin);
+	const user = useSelector(selectUser);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -17,35 +19,42 @@ export const UserPanel = () => {
 	};
 
 	const handleGoToSettingsPage = () => {
-		navigate('/settings')
-	}
+		navigate('/settings');
+	};
 
 	return (
-		<div className="flex items-center space-x-4">
+		<div className="flex items-center space-x-3">
 			{userLogin ? (
 				<>
-					<div className="flex items-center space-x-2">
-						<Button onClick={handleGoToSettingsPage} className="flex bg-transparent hover:bg-transparent !p-0">
-							<span className="text-gray-700 hover:text-blue-800 italic">{userLogin}</span>
-							<Icon icon="mdi:settings-outline" className="w-7 h-7 text-gray-700 hover:text-blue-800 ml-2"/>
-						</Button>
-						
-						<Button
-							onClick={handleLogout}
-							className="bg-transparent hover:bg-transparent !p-0"
-							title="Logout"
-						>
-							<Icon
-								icon="fluent:arrow-exit-32-filled"
-								className="w-7 h-7 text-red-700 hover:text-red-500"
-							/>
-						</Button>
-					</div>
+					<Button
+						onClick={handleGoToSettingsPage}
+						className="flex items-center bg-transparent hover:bg-gray-100 !p-0 rounded-lg transition-colors duration-200"
+					>
+						<img
+							src={user.avatar || avatar}
+							alt="Avatar"
+							className="w-10 h-10 rounded-full object-cover border-gray-20 shadow-sm"
+						/>
+						<span className="ml-2 text-gray-700 hover:text-gray-900 font-medium">
+							{userLogin}
+						</span>
+					</Button>
+
+					<Button
+						onClick={handleLogout}
+						className="bg-transparent hover:bg-gray-100 !p-2 rounded-lg transition-colors duration-200"
+						title="Logout"
+					>
+						<Icon
+							icon="fluent:arrow-exit-32-filled"
+							className="w-6 h-6 text-gray-600 hover:text-red-600"
+						/>
+					</Button>
 				</>
 			) : (
 				<Link
 					to="/login"
-					className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+					className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium"
 				>
 					Вход
 				</Link>
