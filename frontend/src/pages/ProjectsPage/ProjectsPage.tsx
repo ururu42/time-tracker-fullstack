@@ -1,14 +1,12 @@
-//
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProjects } from '../../selectors';
 import { fetchProjects } from '../../action';
-import { Pagination, Header, ProjectList } from './components';
+import { Pagination, ProjectList } from './components';
 import { Search } from './components/Search/Search';
 import { PAGINATION_LIMIT } from '../../constants';
 import { debounce } from './utils';
 import { Button } from '../../components';
-import { AddProjectForm } from './components/Header/AddProjectForm/AddProjectForm';
 import { Link } from 'react-router-dom';
 
 export const ProjectsPage = () => {
@@ -19,10 +17,12 @@ export const ProjectsPage = () => {
 	const [searchPhrase, setSearchPhrase] = useState('');
 	const [shouldSearch, setShouldSearch] = useState(false);
 
+	//странный useEffect, как будто это экшен, надо разобраться 
+
 	useEffect(() => {
 		const fetchProjectsWithLastPage = async () => {
 			const returnedLastPage = await dispatch(
-				fetchProjects(page, PAGINATION_LIMIT, searchPhrase) as any,
+				fetchProjects(page, PAGINATION_LIMIT, searchPhrase),
 			);
 
 			if (returnedLastPage !== undefined) {
@@ -55,7 +55,6 @@ export const ProjectsPage = () => {
 							+ Добавить проект
 						</Button>
 					</Link>
-
 					<div className="mb-8">
 						<Search onChange={onSearch} searchPhrase={searchPhrase} />
 					</div>

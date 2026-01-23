@@ -1,3 +1,5 @@
+import { Task } from './Task';
+
 export interface Project {
 	id: string;
 	owner: string;
@@ -6,4 +8,6 @@ export interface Project {
 	isArchived: boolean;
 	createdAt: string;
 	updatedAt: string;
+	tasks?: Task[];
+	taskCount?: number;
 }

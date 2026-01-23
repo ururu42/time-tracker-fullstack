@@ -2,23 +2,20 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchProjects } from '../../action';
 import { selectProjects } from '../../selectors';
-import { DropDown, Timer, Textarea } from '../../components';
+import { DropDown, Textarea } from '../../components';
 
 export const MainPage = () => {
 	const projects = useSelector(selectProjects);
-	console.log(projects);
 
 	const [newDescription, setNewDescription] = useState('');
 
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		const getProjects = async () => {
-			await dispatch(fetchProjects());
-		};
-
-		getProjects();
+		dispatch(fetchProjects());
 	}, [dispatch]);
+
+	console.log(projects);
 
 	return (
 		<div>
@@ -29,9 +26,7 @@ export const MainPage = () => {
 				</div>
 
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-8 bg-white">
-					<div className="lg:col-span-2">
-						<Timer />
-					</div>
+					<div className="lg:col-span-2"></div>
 
 					<div className="space-y-6">
 						<div>

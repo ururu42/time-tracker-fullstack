@@ -1,7 +1,6 @@
 import { ACTION_TYPE } from './action-type';
-import { AppThunk } from '../store';
 
-export const fetchProjects = (page = 1, limit = 5, search = ''): AppThunk => {
+export const fetchProjects = (page = 1, limit = 5, search = '') => {
 	return async (dispatch) => {
 		try {
 			const response = await fetch(
@@ -17,7 +16,7 @@ export const fetchProjects = (page = 1, limit = 5, search = ''): AppThunk => {
 			}
 
 			const result = await response.json();
-			
+
 			dispatch({ type: ACTION_TYPE.SET_PROJECTS, payload: result.projects });
 			return result.lastPage;
 		} catch (e) {

@@ -71,6 +71,12 @@ export const projectsReducer = (
 				...state,
 				items: [...state.items, action.payload],
 			};
+
+		case ACTION_TYPE.SET_CURRENT_PROJECT:
+			return {
+				...state,
+				currentProject: action.payload,
+			};
 		default:
 			return state;
 	}
