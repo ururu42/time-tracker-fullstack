@@ -62,7 +62,7 @@ export const projectsReducer = (
 			return {
 				...state,
 				items: state.items.map((project) =>
-					project.id === action.payload.id ? action.payload : project,
+					project.id === action.payload._id ? action.payload : project,
 				),
 			};
 

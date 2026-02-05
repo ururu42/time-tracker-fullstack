@@ -17,7 +17,7 @@ export const ProjectsPage = () => {
 	const [searchPhrase, setSearchPhrase] = useState('');
 	const [shouldSearch, setShouldSearch] = useState(false);
 
-	//странный useEffect, как будто это экшен, надо разобраться 
+	//странный useEffect, как будто это экшен, надо разобраться
 
 	useEffect(() => {
 		const fetchProjectsWithLastPage = async () => {
@@ -50,7 +50,7 @@ export const ProjectsPage = () => {
 
 				<div className="p-8 bg-white rounded-b-2xl shadow-md">
 					<Link to="/projects/create">
-						<Button className="bg-gradient-to-r from-green-500 to-green-600 mb-6">
+						<Button className="bg-green-600 hover:bg-green-700 mb-6">
 							{' '}
 							+ Добавить проект
 						</Button>

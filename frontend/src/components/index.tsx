@@ -8,3 +8,5 @@ export * from './H1/H1';
 export * from './P/P';
 export * from './DropDown/DropDown';
 export * from './Textarea/Textarea';
+export * from './Form/Form';
+export * from './Go-Back-Button.tsx/GoBackButton';

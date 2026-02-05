@@ -1,79 +1,46 @@
-import { useAppDispatch } from '../../../../../../store';
-import { Input, Button } from '../../../../../../components';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { selectProjectWithTasks } from '../../../../../../selectors';
+import { Form } from '../../../../../../components';
 import { updateProjectAsync } from '../../../../../../action/update-project-async';
-import { Project } from '../../../../../../models/Project';
 
-interface EditProjectProps {
-	project: Project;
-	setEditingProjectId: (id: string | null) => void;
-	setEditForm: React.Dispatch<
-		React.SetStateAction<{ title: string; description: string }>
-	>;
-	editForm: { title: string; description: string };
-}
+export const EditProject = () => {
+	const projectWithTasks = useSelector(selectProjectWithTasks);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	console.log(projectWithTasks._id);
 
-export const EditProject = ({
-	project,
-	setEditingProjectId,
-	setEditForm,
-	editForm,
-}: EditProjectProps) => {
-	const dispatch = useAppDispatch();
+	const [newTitle, setNewTitle] = useState('');
+	const [newDescription, setNewDescription] = useState('');
 
-	const handleInputChange = ({
-		target,
-	}: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-		console.log(target.name, target.value);
-		const { name, value } = target;
+	useEffect(() => {
+		if (projectWithTasks) {
+			setNewTitle(projectWithTasks.title);
+			setNewDescription(projectWithTasks.description);
+		}
+	}, []);
 
-		setEditForm((prev) => ({
-			...prev,
-			[name]: value,
-		}));
-	};
-
-	const saveEdit = (projectId: string) => {
-		dispatch(updateProjectAsync(projectId, editForm));
-		setEditingProjectId(null);
-	};
-
-	const cancelEdit = () => {
-		setEditingProjectId(null);
+	const saveEdit = () => {
+		dispatch(updateProjectAsync(projectWithTasks._id, newTitle, newDescription));
+		navigate(`/projects/${projectWithTasks._id}`);
 	};
 
 	return (
 		<>
 			<div className="w-full flex flex-col">
-				<Input
-					className="w-full font-semibold text-xl text-gray-700 mb-2"
-					type="text"
-					name="title"
-					value={editForm.title}
-					onChange={handleInputChange}
+				<Form
+					title={newTitle}
+					description={newDescription}
+					onTitleChange={setNewTitle}
+					onDescriptionChange={setNewDescription}
+					onSubmit={saveEdit}
+					onCancel={() => navigate(-1)}
+					titleLabel="Название проекта"
+					descriptionLabel="Описание проекта"
+					titlePlaceholder="Введите название проекта"
+					descriptionPlaceholder="Введите описание проекта"
 				/>
-
-				<textarea
-					className="text-base text-gray-500 border border-gray-400 p-4 rounded"
-					name="description"
-					value={editForm.description}
-					onChange={handleInputChange}
-				/>
-				<div className="flex justify-between">
-					<Button
-						className="mt-2.5 w-32 bg-green-600 hover:bg-green-700"
-						onClick={() => saveEdit(project.id)}
-						disabled={false}
-					>
-						Save
-					</Button>
-					<Button
-						className="mt-2.5 w-32 bg-red-500 hover:bg-red-600"
-						onClick={cancelEdit}
-						disabled={false}
-					>
-						Cancel
-					</Button>
-				</div>
 			</div>
 		</>
 	);

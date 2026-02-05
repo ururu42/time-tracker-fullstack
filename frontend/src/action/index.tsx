@@ -4,3 +4,5 @@ export * from './action-type';
 export * from './logout';
 export * from './fetch-projects';
 export * from './fetch-project-with-tasks';
+export * from './add-task-async';
+export * from './remove-project-async';

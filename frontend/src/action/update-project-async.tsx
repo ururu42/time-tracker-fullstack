@@ -1,8 +1,6 @@
-import { title } from 'process';
 import { ACTION_TYPE } from './action-type';
 
-export const updateProjectAsync = (projectId, editForm) => {
-	const { title, description } = editForm;
+export const updateProjectAsync = (projectId, title, description) => {
 	return async (dispatch) => {
 		try {
 			const response = await fetch(`/api/project/${projectId}`, {
@@ -19,9 +17,9 @@ export const updateProjectAsync = (projectId, editForm) => {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 
-			const updateProject = await response.json();
-			console.log('Задача обновлена, ответ от сервера:', updateProject);
-			dispatch({ type: ACTION_TYPE.UPDATE_PROJECT, payload: updateProject.data });
+			const updatedProject = await response.json();
+			console.log('Задача обновлена, ответ от сервера:', updatedProject);
+			dispatch({ type: ACTION_TYPE.UPDATE_PROJECT, payload: updatedProject.data });
 		} catch (e) {
 			console.error('Server error', e);
 		}
