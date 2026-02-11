@@ -1,22 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectProjects } from '../../selectors';
+import { Link, Navigate } from 'react-router-dom';
+import { selectProjects, selectUser } from '../../selectors';
 import { fetchProjects } from '../../action';
 import { Pagination, ProjectList } from './components';
 import { Search } from './components/Search/Search';
 import { PAGINATION_LIMIT } from '../../constants';
 import { debounce } from './utils';
 import { Button } from '../../components';
-import { Link } from 'react-router-dom';
 
 export const ProjectsPage = () => {
 	const [page, setPage] = useState(1);
 	const [lastPage, setLastPage] = useState(1);
 	const dispatch = useDispatch();
 	const projects = useSelector(selectProjects);
+	const user = useSelector(selectUser);
 	const [searchPhrase, setSearchPhrase] = useState('');
 	const [shouldSearch, setShouldSearch] = useState(false);
 
+	if (!user || !user.id) {
+		return <Navigate to="/login" replace />;
+	}
 	//странный useEffect, как будто это экшен, надо разобраться
 
 	useEffect(() => {

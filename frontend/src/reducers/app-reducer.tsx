@@ -1,3 +1,5 @@
+// очень странный редьюсер, по моему не нужен
+
 import { ACTION_TYPE } from '../action';
 
 const initialAppState = {

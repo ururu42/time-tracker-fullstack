@@ -1,4 +1,17 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser } from '../../../../../../../../selectors';
+import { removeTaskAsync } from '../../../../../../../../action';
+import { Icon } from '@iconify/react';
+
 export const TasksList = ({ project }) => {
+	const dispatch = useDispatch();
+	const user = useSelector(selectUser);
+	console.log(user);
+
+	const onTaskRemove = (taskId) => {
+		// Сделать вопрос: Действительно хотите удалить?
+		dispatch(removeTaskAsync(taskId));
+	};
 	return (
 		<div>
 			{project.tasks && project.tasks.length > 0 ? (
@@ -20,6 +33,9 @@ export const TasksList = ({ project }) => {
 									)}
 
 									<div className="flex flex-wrap gap-2 text-sm">
+										<span className="text-gray-700">
+											Статус задачи:{' '}
+										</span>
 										{task.status && (
 											<span
 												className={`px-3 py-1 rounded-full ${
@@ -37,6 +53,7 @@ export const TasksList = ({ project }) => {
 														: 'Новая'}
 											</span>
 										)}
+										<span className="text-gray-700">Приоритет: </span>
 
 										{task.priority && (
 											<span
@@ -75,6 +92,20 @@ export const TasksList = ({ project }) => {
 											).toLocaleDateString()}
 										</div>
 									)}
+								</div>
+								<div className="flex ml-3">
+									<Icon
+										icon="mdi:edit"
+										className="w-6 h-6 text-gray-600 hover:text-gray-700"
+										onClick={() =>
+											navigate(`/projects/${project._id}/edit`)
+										}
+									></Icon>
+									<Icon
+										icon="mdi:delete-forever"
+										className="w-7 h-7 text-red-600 hover:text-red-700 ml-2 cursor-pointer"
+										onClick={() => onTaskRemove(task._id)}
+									></Icon>
 								</div>
 							</div>
 						</div>

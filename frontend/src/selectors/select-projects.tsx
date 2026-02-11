@@ -1,1 +1,1 @@
-export const selectProjects = (state: any) => state.projects.items;
+export const selectProjects = (state: any) => state.projects.projects;

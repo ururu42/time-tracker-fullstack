@@ -6,3 +6,4 @@ export * from './fetch-projects';
 export * from './fetch-project-with-tasks';
 export * from './add-task-async';
 export * from './remove-project-async';
+export * from './remove-task-async';
