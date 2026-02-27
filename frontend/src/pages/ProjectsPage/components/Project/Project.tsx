@@ -1,25 +1,36 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchProjectWithTasks, removeProjectAsync } from '../../../../action';
-import { selectProjectWithTasks } from '../../../../selectors';
+import {
+	fetchcurrentProject,
+	removeProjectAsync,
+	fetchTasksForProject,
+} from '../../../../action';
+import { selectCurrentProject } from '../../../../selectors';
 import { H1, GoBackButton } from '../../../../components';
 import { Tasks } from './components/Tasks/Tasks';
 import { EditProject } from '../ProjectList/components/EditProject/EditProject';
 import { Icon } from '@iconify/react';
 
 export const Project = () => {
-	const params = useParams();
-	const project = useSelector(selectProjectWithTasks);
+	const { id } = useParams();
+	const project = useSelector(selectCurrentProject);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const [isEditing, setIsEditing] = useState(false);
 	const [editForm, setEditForm] = useState({ title: '', description: '' });
 
+	// 🔹 Загружаем проект и задачи при монтировании или смене id
 	useEffect(() => {
-		dispatch(fetchProjectWithTasks(params.id));
-	}, [dispatch, params.id]);
+		if (id) {
+			// Загружаем проект
+			dispatch(fetchcurrentProject(id));
+
+			// Загружаем задачи по projectId напрямую
+			dispatch(fetchTasksForProject(id));
+		}
+	}, [dispatch, id]);
 
 	const onProjectEdit = (project) => {
 		setEditForm({ title: project.title, description: project.description });
@@ -27,12 +38,11 @@ export const Project = () => {
 	};
 
 	const onProjectRemove = (projectId) => {
-		// Сделать вопрос: Действительно хотите удалить?
 		dispatch(removeProjectAsync(projectId));
 		navigate('/projects');
 	};
 
-	// заменить на компонент лоудера
+	// 🔹 Лоадер проекта
 	if (!project) {
 		return (
 			<div className="max-w-6xl mx-auto p-8">
@@ -68,18 +78,20 @@ export const Project = () => {
 							<GoBackButton onClick={() => navigate('/projects')} />
 
 							<H1 className="text-3xl font-bold text-gray-800 flex-grow">
-								Проект: {project?.title || 'Загрузка...'}
+								Проект: {project.title}
 							</H1>
+
 							<Icon
 								icon="mdi:edit"
-								className="w-8 h-8 text-gray-600 hover:text-gray-700"
-								onClick={() => navigate(`/projects/${project._id}/edit`)}
-							></Icon>
+								className="w-8 h-8 text-gray-600 hover:text-gray-700 cursor-pointer"
+								onClick={() => navigate(`/projects/${project.id}/edit`)}
+							/>
+
 							<Icon
 								icon="mdi:delete-forever"
 								className="w-10 h-10 text-red-600 hover:text-red-700 ml-2 cursor-pointer"
-								onClick={() => onProjectRemove(project._id)}
-							></Icon>
+								onClick={() => onProjectRemove(project.id)}
+							/>
 						</div>
 
 						<div className="mb-8">

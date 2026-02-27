@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchProjects } from '../../action';
+import { fetchProjects, fetchTasksForProject } from '../../action';
 import { selectProjects } from '../../selectors';
 import { DropDown, Textarea } from '../../components';
 
@@ -14,8 +14,6 @@ export const MainPage = () => {
 	useEffect(() => {
 		dispatch(fetchProjects());
 	}, [dispatch]);
-
-	console.log(projects);
 
 	return (
 		<div>

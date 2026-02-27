@@ -4,7 +4,7 @@ export interface Task {
 	projectId: string;
 	title: string;
 	description: string;
-	status: 'todo' | 'in-progress' | 'done';
+	status: 'todo' | 'in-progress' | 'completed';
 	priority: 'low' | 'medium' | 'high';
 	isArchived: boolean;
 	createdAt: string;

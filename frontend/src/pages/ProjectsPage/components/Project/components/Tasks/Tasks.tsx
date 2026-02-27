@@ -5,7 +5,6 @@ import { useState } from 'react';
 export const Tasks = ({ project }) => {
 	const [isAddTask, setIsAddTask] = useState(false);
 
-	console.log('isAddTask', isAddTask);
 	return (
 		<div>
 			<h2 className="text-xl font-semibold text-gray-700 mb-4">Задачи проекта</h2>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Form } from '../../../../../../../../components';
-import { addTaskAsync, fetchProjectWithTasks } from '../../../../../../../../action';
+import { addTaskAsync, fetchcurrentProject } from '../../../../../../../../action';
 
 export const AddTaskForm = ({ project, setIsAddTask }) => {
 	const navigate = useNavigate();
@@ -16,12 +16,12 @@ export const AddTaskForm = ({ project, setIsAddTask }) => {
 			addTaskAsync({
 				title: newTitle,
 				description: newDescription,
-				projectId: project._id,
+				projectId: project.id,
 			}),
 		);
-		dispatch(fetchProjectWithTasks(project._id));
+		dispatch(fetchcurrentProject(project.id));
 		setIsAddTask(false);
-		navigate(`/projects/${project._id}`);
+		navigate(`/projects/${project.id}`);
 	};
 
 	return (

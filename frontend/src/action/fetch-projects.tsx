@@ -17,7 +17,7 @@ export const fetchProjects = (page = 1, limit = 5, search = '') => {
 
 			const result = await response.json();
 
-			dispatch({ type: ACTION_TYPE.SET_PROJECTS, payload: result.projects });
+			dispatch({ type: ACTION_TYPE.SET_PROJECTS, payload: result.data });
 			return result.lastPage;
 		} catch (e) {
 			console.error('Error fetching projects:', e);

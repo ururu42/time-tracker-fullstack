@@ -1,29 +1,29 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { selectProjectWithTasks } from '../../../../../../selectors';
+import { selectCurrentProject } from '../../../../../../selectors';
 import { Form } from '../../../../../../components';
 import { updateProjectAsync } from '../../../../../../action/update-project-async';
 
 export const EditProject = () => {
-	const projectWithTasks = useSelector(selectProjectWithTasks);
+	const currentProject = useSelector(selectCurrentProject);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	console.log(projectWithTasks._id);
+	console.log(currentProject.id);
 
 	const [newTitle, setNewTitle] = useState('');
 	const [newDescription, setNewDescription] = useState('');
 
 	useEffect(() => {
-		if (projectWithTasks) {
-			setNewTitle(projectWithTasks.title);
-			setNewDescription(projectWithTasks.description);
+		if (currentProject) {
+			setNewTitle(currentProject.title);
+			setNewDescription(currentProject.description);
 		}
 	}, []);
 
 	const saveEdit = () => {
-		dispatch(updateProjectAsync(projectWithTasks._id, newTitle, newDescription));
-		navigate(`/projects/${projectWithTasks._id}`);
+		dispatch(updateProjectAsync(currentProject.id, newTitle, newDescription));
+		navigate(`/projects/${currentProject.id}`);
 	};
 
 	return (

@@ -16,7 +16,20 @@ export const addTaskAsync = (taskData) => {
 
 			const addedTask = await response.json();
 			console.log('Задача добавлена, ответ от сервера:', addedTask);
-			dispatch({ type: ACTION_TYPE.ADD_TASK, payload: addedTask.data });
+
+			// Проверим структуру ответа сервера
+			let taskPayload;
+			if (addedTask.data) {
+				// Если сервер возвращает {data: {...}}
+				taskPayload = addedTask.data;
+			} else {
+				// Если сервер возвращает саму задачу
+				taskPayload = addedTask;
+			}
+
+			console.log('Dispatching ADD_TASK with payload:', taskPayload);
+
+			dispatch({ type: ACTION_TYPE.ADD_TASK, payload: taskPayload });
 		} catch (e) {
 			console.error('Server error', e);
 		}

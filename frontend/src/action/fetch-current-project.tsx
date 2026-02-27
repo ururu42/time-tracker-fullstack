@@ -1,6 +1,6 @@
 import { ACTION_TYPE } from './action-type';
 
-export const fetchProjectWithTasks = (projectId) => {
+export const fetchcurrentProject = (projectId) => {
 	return async (dispatch) => {
 		try {
 			const res = await fetch(`/api/project/${projectId}`, {
@@ -14,7 +14,10 @@ export const fetchProjectWithTasks = (projectId) => {
 
 			const result = await res.json();
 
-			dispatch({ type: ACTION_TYPE.SET_CURRENT_PROJECT, payload: result.data });
+			dispatch({
+				type: ACTION_TYPE.SET_CURRENT_PROJECT,
+				payload: result.data,
+			});
 		} catch (e) {
 			console.error('Error fetching project:', e);
 		}

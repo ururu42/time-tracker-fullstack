@@ -6,9 +6,9 @@ export const ProjectList = ({ projects }) => {
 			{projects && projects.length > 0 ? (
 				projects.map((project) => (
 					<Link
-						to={`/projects/${project._id}`}
+						to={`/projects/${project.id}`}
 						className="flex justify-between items-center p-6 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow"
-						key={project._id}
+						key={project.id}
 					>
 						<div className="flex flex-col">
 							<h3 className="font-semibold text-xl text-gray-700 mb-2">
