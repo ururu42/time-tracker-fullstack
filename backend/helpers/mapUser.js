@@ -1,16 +1,17 @@
-function mapUser(user) {
+const mongoose = require("mongoose");
+const roles = require("../constants/roles");
+
+module.exports = function mapUser(user) {
   return {
     id: user._id,
     login: user.login,
     name: user.name,
-    avatar: user.avatar || null,
+    avatar: user.avatar,
     role: user.role,
-    settings: {
-      timezone: user.settings?.timezone || "Europe/Chisinau",
-    },
+    settings: user.settings,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
+    // Определяем строковое представление роли
+    roleName: user.role === roles.ADMIN ? "admin" : "user",
   };
-}
-
-module.exports = mapUser;
+};

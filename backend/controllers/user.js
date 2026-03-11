@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { generate } = require("../helpers/token");
 const ROLES = require("../constants/roles");
+const mapUser = require("../helpers/mapUser");
 
 async function register(login, password) {
   if (!login || !password || password.length < 3) {
@@ -16,58 +17,48 @@ async function register(login, password) {
 
   const passwordHash = await bcrypt.hash(password, 10);
   const newUser = await User.create({ login, password: passwordHash });
-  const token = generate({ id: newUser.id });
+  const token = generate({ id: newUser._id });
 
-  return { user: newUser, token };
+  return { user: mapUser(newUser), token };
 }
 
 async function login(login, password) {
+  console.log("Начало процесса логина для пользователя:", login);
+
   const user = await User.findOne({ login });
+  console.log("Найден пользователь:", user ? user.login : "не найден");
+
   if (!user) {
+    console.log("Пользователь не найден");
     throw new Error("User not found");
   }
 
+  console.log("Проверка пароля...");
   const isPasswordValid = await bcrypt.compare(password, user.password);
+  console.log("Результат проверки пароля:", isPasswordValid);
+
   if (!isPasswordValid) {
+    console.log("Неверный пароль");
     throw new Error("Invalid password");
   }
 
-  const token = generate({ id: user.id });
+  console.log("Генерация токена...");
+  const token = generate({ id: user._id });
+  console.log("Токен сгенерирован");
 
-  return { user, token };
+  console.log("Возврат данных пользователя");
+  return { user: mapUser(user), token };
 }
 
 async function getUsers() {
-  return await User.find().select("-password");
+  const users = await User.find().select("-password");
+  return users.map(mapUser);
 }
 
 async function getUserById(id) {
-  return await User.findById(id).select("-password");
+  const user = await User.findById(id).select("-password");
+  return user ? mapUser(user) : null;
 }
-
-// async function updateUserById(id, data = {}) {
-//   const allowedFields = ["name", "avatar", "login"];
-//   const updateData = {};
-
-//   for (const field of allowedFields) {
-//     if (data[field] !== undefined) {
-//       updateData[field] = data[field];
-//     }
-//   }
-
-//   if (typeof data.settings === "object" && data.settings !== undefined) {
-//     for (const key in data.settings) {
-//       updateData[`settings.${key}`] = data.settings[key];
-//     }
-//   }
-
-//   const updatedUser = await User.findByIdAndUpdate(id, updateData, {
-//     new: true,
-//     runValidators: true,
-//   });
-
-//   return updatedUser;
-// }
 
 async function updateUserById(id, data = {}) {
   try {
@@ -107,7 +98,7 @@ async function updateUserById(id, data = {}) {
     });
 
     console.log("Результат обновления:", updatedUser);
-    return updatedUser;
+    return updatedUser ? mapUser(updatedUser) : null;
   } catch (error) {
     console.error("Ошибка при обновлении пользователя:", error);
     throw error;

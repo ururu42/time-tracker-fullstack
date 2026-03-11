@@ -13,7 +13,7 @@ router.use(authenticated);
 
 router.get("/", async (req, res) => {
   try {
-    const times = await getTimeEntries(req.user._id);
+    const times = await getTimeEntries(req.user.id);
     res.status(200).send({ data: times });
   } catch (e) {
     res.status(404).send({ error: e.message || "Server error" });
@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const newTime = await createTimeEntry(req.user._id, req.body);
+    const newTime = await createTimeEntry(req.user.id, req.body);
     res.status(201).send({ data: newTime });
   } catch (e) {
     res.status(404).send({ error: e.message || "Server error" });
@@ -31,7 +31,7 @@ router.post("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const time = await getTimeEntryById(req.user._id, req.params.id);
+    const time = await getTimeEntryById(req.user.id, req.params.id);
     if (!time) {
       res.status(404).send({ error: "Time entry not found" });
       return;
@@ -45,9 +45,9 @@ router.get("/:id", async (req, res) => {
 router.patch("/:id", async (req, res) => {
   try {
     const updated = await updateTimeEntry(
-      req.user._id,
+      req.user.id,
       req.params.id,
-      req.body
+      req.body,
     );
     if (!updated) {
       res.status(404).send({ error: "Time entry not updated" });
@@ -61,7 +61,7 @@ router.patch("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    const deleted = await deleteTimeEntry(req.user._id, req.params.id);
+    const deleted = await deleteTimeEntry(req.user.id, req.params.id);
     if (!deleted) {
       res.status(404).send({ error: "Time entry not deleted" });
       return;

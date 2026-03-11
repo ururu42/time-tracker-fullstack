@@ -6,5 +6,6 @@ router.use("/auth", require("./auth"));
 router.use("/project", require("./projects"));
 router.use("/time", require("./time"));
 router.use("/user", require("./user"));
+router.use("/tasks", require("./tasks"));
 
 module.exports = router;

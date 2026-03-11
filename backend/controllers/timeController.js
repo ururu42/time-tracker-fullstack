@@ -1,17 +1,18 @@
 const TimeEntry = require("../models/TimeEntry");
+const mapTimeEntry = require("../helpers/mapTimeEntry");
 
 async function getTimeEntries(userId) {
   const allTimeEntries = await TimeEntry.find({ owner: userId }).sort({
     startTime: -1,
   });
 
-  return allTimeEntries;
+  return allTimeEntries.map(mapTimeEntry);
 }
 
 async function getTimeEntryById(userId, entryId) {
   const timeEntry = await TimeEntry.findOne({ _id: entryId, owner: userId });
 
-  return timeEntry;
+  return timeEntry ? mapTimeEntry(timeEntry) : null;
 }
 
 async function createTimeEntry(userId, body) {
@@ -44,7 +45,7 @@ async function createTimeEntry(userId, body) {
 
   const createdNewTimeEntry = await TimeEntry.create(newData);
 
-  return createdNewTimeEntry;
+  return mapTimeEntry(createdNewTimeEntry);
 }
 
 async function updateTimeEntry(userId, entryId, body) {
@@ -69,7 +70,7 @@ async function updateTimeEntry(userId, entryId, body) {
     { runValidators: true, new: true }
   );
 
-  return updatedTimeEntry;
+  return updatedTimeEntry ? mapTimeEntry(updatedTimeEntry) : null;
 }
 
 async function deleteTimeEntry(userId, entryId) {

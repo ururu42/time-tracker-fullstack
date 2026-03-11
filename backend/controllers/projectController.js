@@ -1,71 +1,63 @@
 const Project = require("../models/Projects");
+const Task = require("../models/Task");
+const mapProject = require("../helpers/mapProject");
 
-async function getProjects(userId, search = "", limit = 5, page = 1) {
-  const searchCondition = { owner: userId };
+async function getProjects(userId, search = "", limit = 10, page = 1) {
+  const filter = { owner: userId };
 
   if (search) {
-    searchCondition.title = { $regex: search, $options: "i" };
+    filter.title = { $regex: search, $options: "i" };
   }
 
   const [projects, count] = await Promise.all([
-    Project.find(searchCondition)
+    Project.find(filter)
       .limit(limit)
       .skip((page - 1) * limit)
-      .sort({
-        createdAt: -1,
-      }),
-    Project.countDocuments(searchCondition),
+      .sort({ createdAt: -1 }),
+    Project.countDocuments(filter),
   ]);
-  return { projects, lastPage: Math.ceil(count / limit) };
+
+  return {
+    items: projects.map(mapProject),
+    lastPage: Math.ceil(count / limit),
+  };
 }
 
 async function getProjectById(userId, projectId) {
   const project = await Project.findOne({ _id: projectId, owner: userId });
-
-  return project;
+  return project ? mapProject(project) : null;
 }
 
 async function createProject(userId, body) {
-  const allowedFields = ["title", "description", "isArchived"];
-  const projectData = {
+  const project = await Project.create({
     owner: userId,
-  };
-  for (const key of allowedFields) {
-    if (body[key] !== undefined) {
-      projectData[key] = body[key];
-    }
-  }
+    title: body.title,
+    description: body.description,
+    isArchived: body.isArchived,
+  });
 
-  const newProject = await Project.create(projectData);
-
-  return newProject;
+  return mapProject(project);
 }
 
 async function updateProject(userId, projectId, body) {
-  const allowedFields = ["title", "description", "isArchived"];
-  const updateData = {};
-  for (const key of allowedFields) {
-    if (body[key] !== undefined) {
-      updateData[key] = body[key];
-    }
-  }
-
-  const updatedProject = await Project.findOneAndUpdate(
+  const updated = await Project.findOneAndUpdate(
     { _id: projectId, owner: userId },
-    updateData,
-    { new: true, runValidators: true }
+    body,
+    { new: true, runValidators: true },
   );
 
-  return updatedProject;
+  return updated ? mapProject(updated) : null;
 }
 
 async function deleteProject(userId, projectId) {
-  const deletedProject = await Project.deleteOne({
+  await Task.deleteMany({ projectId, owner: userId });
+
+  const result = await Project.deleteOne({
     _id: projectId,
     owner: userId,
   });
 
-  return deletedProject;
+  return result.deletedCount > 0;
 }
 
 module.exports = {

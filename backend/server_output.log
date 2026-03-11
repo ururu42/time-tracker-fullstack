@@ -1,0 +1,165 @@
+
+> backend@1.0.0 serve
+> nodemon app.js
+
+[33m[nodemon] 3.1.10[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,cjs,json[39m
+[32m[nodemon] starting `node app.js`[39m
+/home/ururu/www/time-tracker/backend/node_modules/path-to-regexp/dist/index.js:96
+            throw new PathError(`Missing parameter name at index ${index}`, str);
+            ^
+
+PathError [TypeError]: Missing parameter name at index 1: *; visit https://git.new/pathToRegexpError for info
+    at name (/home/ururu/www/time-tracker/backend/node_modules/path-to-regexp/dist/index.js:96:19)
+    at parse (/home/ururu/www/time-tracker/backend/node_modules/path-to-regexp/dist/index.js:113:68)
+    at pathToRegexp (/home/ururu/www/time-tracker/backend/node_modules/path-to-regexp/dist/index.js:267:58)
+    at Object.match (/home/ururu/www/time-tracker/backend/node_modules/path-to-regexp/dist/index.js:237:30)
+    at matcher (/home/ururu/www/time-tracker/backend/node_modules/router/lib/layer.js:86:23)
+    at new Layer (/home/ururu/www/time-tracker/backend/node_modules/router/lib/layer.js:93:62)
+    at Function.route (/home/ururu/www/time-tracker/backend/node_modules/router/index.js:428:17)
+    at Function.route (/home/ururu/www/time-tracker/backend/node_modules/express/lib/application.js:257:22)
+    at app.<computed> [as get] (/home/ururu/www/time-tracker/backend/node_modules/express/lib/application.js:478:22)
+    at Object.<anonymous> (/home/ururu/www/time-tracker/backend/app.js:22:5) {
+  originalPath: '*'
+}
+
+Node.js v22.17.1
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+Получен запрос на логин
+Вызов функции login
+Начало процесса логина для пользователя: ururuTest
+Найден пользователь: ururuTest
+Проверка пароля...
+Результат проверки пароля: true
+Генерация токена...
+Токен сгенерирован
+Возврат данных пользователя
+Функция login завершена успешно
+Ответ отправлен клиенту
+Получен запрос на логин
+Вызов функции login
+Начало процесса логина для пользователя: ururuTest
+Найден пользователь: ururuTest
+Проверка пароля...
+Результат проверки пароля: true
+Генерация токена...
+Токен сгенерирован
+Возврат данных пользователя
+Функция login завершена успешно
+Ответ отправлен клиенту
+Получен запрос на логин
+Вызов функции login
+Начало процесса логина для пользователя: ururuTest
+Найден пользователь: ururuTest
+Проверка пароля...
+Результат проверки пароля: true
+Генерация токена...
+Токен сгенерирован
+Возврат данных пользователя
+Функция login завершена успешно
+Ответ отправлен клиенту
+elpers/updateValidators.js:154:22
+        at module.exports (/home/ururu/www/time-tracker/backend/node_modules/mongoose/lib/helpers/updateValidators.js:205:7)
+        at /home/ururu/www/time-tracker/backend/node_modules/mongoose/lib/query.js:4115:7
+        at new Promise (<anonymous>)
+        at model.Query.validate (/home/ururu/www/time-tracker/backend/node_modules/mongoose/lib/query.js:4114:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        at async model.Query._findOneAndUpdate (/home/ururu/www/time-tracker/backend/node_modules/mongoose/lib/query.js:3529:5)
+        at async model.Query.exec (/home/ururu/www/time-tracker/backend/node_modules/mongoose/lib/query.js:4627:63) {
+      properties: [Object],
+      kind: 'enum',
+      path: 'status',
+      value: 'completed',
+      reason: undefined,
+      [Symbol(mongoose#validatorError)]: true
+    }
+  },
+  _message: 'Validation failed'
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node app.js`[39m
+MongoDB connected!
+Server has been started on port 3001...

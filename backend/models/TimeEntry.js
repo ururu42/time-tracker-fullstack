@@ -7,9 +7,9 @@ const TimeEntrySchema = mongoose.Schema(
       ref: "User",
       required: true,
     },
-    projectId: {
+    taskId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Project",
+      ref: "Task",
       required: true,
     },
     startTime: { type: Date, required: true },

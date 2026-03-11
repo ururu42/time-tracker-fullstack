@@ -1,7 +1,6 @@
 const express = require("express");
 const authenticated = require("../middlewares/authenticated");
 const { getUserById, updateUserById } = require("../controllers/user");
-const mapUser = require("../helpers/mapUser");
 
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
@@ -17,7 +16,7 @@ router.get("/me", async (req, res) => {
       return;
     }
 
-    res.status(200).send({ data: mapUser(user) });
+    res.status(200).send({ data: user });
   } catch (e) {
     res.status(500).send({ error: "Server error" });
   }
@@ -40,7 +39,7 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
 
     res.status(200).send({
       message: "User updated successfully",
-      data: mapUser(updatedUser),
+      data: updatedUser,
     });
   } catch (e) {
     console.error("Ошибка при обновлении пользователя:", e);

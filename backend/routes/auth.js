@@ -1,6 +1,5 @@
 const express = require("express");
 const { register, login } = require("../controllers/user");
-const mapUser = require("../helpers/mapUser");
 
 const router = express.Router({ mergeParams: true });
 
@@ -11,9 +10,9 @@ router.post("/register", async (req, res) => {
     res
       .cookie("token", token, { httpOnly: true })
       .status(201)
-      .send({ 
-        error: null, 
-        user: mapUser(user) 
+      .send({
+        error: null,
+        user,
       });
   } catch (e) {
     res.status(400).send({ error: e.message || "Unknown error" });
@@ -21,14 +20,19 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
+  console.log("Получен запрос на логин");
   try {
+    console.log("Вызов функции login");
     const { user, token } = await login(req.body.login, req.body.password);
+    console.log("Функция login завершена успешно");
 
     res
       .cookie("token", token, { httpOnly: true })
       .status(200)
-      .send({ error: null, user: mapUser(user) });
+      .send({ error: null, user });
+    console.log("Ответ отправлен клиенту");
   } catch (e) {
+    console.error("Ошибка при логине:", e.message);
     res.status(400).send({ error: e.message || "Unknown error" });
   }
 });
