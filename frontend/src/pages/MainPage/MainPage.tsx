@@ -1,52 +1,97 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 import { fetchProjects, fetchTasksForProject } from '../../action';
-import { selectProjects } from '../../selectors';
-import { DropDown, Textarea } from '../../components';
+import { selectProjects, selectUser } from '../../selectors';
+import { DropDown, P, TaskSearchInput, Timer } from '../../components';
+import {
+	HeaderMainPage,
+	Main,
+	TrackerButtons,
+	TaskTextarea,
+	TrackerComment,
+	TodayTimeEntries,
+	Statistics,
+} from './components';
+import { Icon } from '@iconify/react';
 
 export const MainPage = () => {
-	const projects = useSelector(selectProjects);
-
-	const [newDescription, setNewDescription] = useState('');
-
 	const dispatch = useDispatch();
 
+	const projects = useSelector(selectProjects);
+	const user = useSelector(selectUser);
+
+	const [selectedProject, setSelectedProject] = useState('');
+	const [selectedTask, setSelectedTask] = useState(null);
+	const [description, setDescription] = useState('');
+
+	const [timerComment, setTimerComment] = useState('');
+
+	if (!user || !user.id) {
+		return <Navigate to="/login" replace />;
+	}
+
+	// загрузка проектов
 	useEffect(() => {
 		dispatch(fetchProjects());
 	}, [dispatch]);
 
+	// загрузка задач проекта
+	useEffect(() => {
+		if (selectedProject) {
+			dispatch(fetchTasksForProject(selectedProject));
+		}
+	}, [dispatch, selectedProject]);
+
+	const projectOptions = projects.map((project) => ({
+		value: project.id.toString(),
+		label: project.title,
+	}));
+
 	return (
-		<div>
-			<div className="max-w-6xl mx-auto">
-				<div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-8 text-white rounded-t-2xl">
-					<h1 className="text-4xl font-bold">Time Tracker</h1>
-					<p className="opacity-90 mt-2">Отслеживайте ваше время эффективно</p>
+		<Main>
+			<HeaderMainPage user={user} />
+			<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
+				<div className="flex items-center justify-between mb-6">
+					<DropDown
+						className="w-full"
+						options={projectOptions}
+						value={selectedProject}
+						onChange={setSelectedProject}
+						placeholder="Выберите проект"
+					/>
+
+					<Timer
+						task={selectedTask}
+						comment={timerComment}
+						setComment={setTimerComment}
+						disabled={!selectedProject}
+					/>
 				</div>
-
-				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-8 bg-white">
-					<div className="lg:col-span-2"></div>
-
-					<div className="space-y-6">
-						<div>
-							<label className="block text-gray-70 font-medium mb-2">
-								Проект
-							</label>
-							<DropDown projects={projects} />
-						</div>
-
-						<div>
-							<label className="block text-gray-700 font-medium mb-2">
-								Описание задачи
-							</label>
-							<Textarea
-								placeholder="Введите описание задачи..."
-								value={newDescription}
-								onChange={({ target }) => setNewDescription(target.value)}
-							/>
-						</div>
-					</div>
-				</div>
+				<TaskSearchInput
+					selectedProject={selectedProject}
+					description={description}
+					setDescription={setDescription}
+					setSelectedTask={setSelectedTask}
+					disabled={!selectedProject}
+				/>
+				<TaskTextarea
+					description={description}
+					setDescription={setDescription}
+					disabled={!selectedProject}
+				/>
+				<TrackerComment
+					timerComment={timerComment}
+					setTimerComment={setTimerComment}
+					disabled={!selectedProject}
+				/>
+				<TrackerButtons />
 			</div>
-		</div>
+
+			<div className="grid grid-cols-3 gap-6">
+				<TodayTimeEntries />
+				<Statistics />
+			</div>
+		</Main>
 	);
 };

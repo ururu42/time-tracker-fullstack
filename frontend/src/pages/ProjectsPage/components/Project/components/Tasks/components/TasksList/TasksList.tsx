@@ -59,8 +59,6 @@ export const TasksList = ({ project }) => {
 		}
 	};
 
-	console.log('tasksByProject', tasksByProject);
-
 	return (
 		<div>
 			{tasksByProject && tasksByProject.length > 0 ? (

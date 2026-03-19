@@ -8,6 +8,7 @@ import { Search } from './components/Search/Search';
 import { PAGINATION_LIMIT } from '../../constants';
 import { debounce } from './utils';
 import { Button } from '../../components';
+import { Icon } from '@iconify/react';
 
 export const ProjectsPage = () => {
 	const [page, setPage] = useState(1);
@@ -45,33 +46,37 @@ export const ProjectsPage = () => {
 	};
 
 	return (
-		<div>
-			<div className="max-w-6xl mx-auto">
-				<div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-8 text-white rounded-t-2xl">
-					<h1 className="text-4xl font-bold">Проекты</h1>
-					<p className="opacity-90 mt-2">Управление вашими проектами</p>
-				</div>
-
-				<div className="p-8 bg-white rounded-b-2xl shadow-md">
+		<main className="flex-1 p-2 overflow-auto bg-gray-50">
+			<div className="w-full">
+				{/* Заголовок страницы */}
+				<div className="flex items-center justify-between mb-4">
+					<h1 className="text-3xl font-bold text-gray-900">Проекты</h1>
 					<Link to="/projects/create">
-						<Button className="bg-green-600 hover:bg-green-700 mb-6">
-							{' '}
-							+ Добавить проект
+						<Button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors">
+							<Icon icon="solar:plus-circle-bold" className="w-5 h-5" />
+							Добавить проект
 						</Button>
 					</Link>
-					<div className="mb-8">
+				</div>
+
+				{/* Карточка с контентом */}
+				<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+					{/* Поиск */}
+					<div className="mb-6">
 						<Search onChange={onSearch} searchPhrase={searchPhrase} />
 					</div>
 
+					{/* Список проектов */}
 					<div className="mb-8">
 						<ProjectList projects={projects} />
 					</div>
 
+					{/* Пагинация */}
 					<div className="flex justify-center">
 						<Pagination setPage={setPage} page={page} lastPage={lastPage} />
 					</div>
 				</div>
 			</div>
-		</div>
+		</main>
 	);
 };

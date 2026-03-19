@@ -1,7 +1,6 @@
 import { ACTION_TYPE } from './action-type';
 
 export const updateUserAsync = (userId, editForm) => {
-	console.log(userId, editForm);
 	const { login, name } = editForm;
 	return async (dispatch) => {
 		try {

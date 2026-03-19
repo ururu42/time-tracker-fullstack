@@ -14,7 +14,8 @@ export const UserPanel = () => {
 
 	const handleLogout = () => {
 		dispatch(logout());
-		sessionStorage.removeItem('userData');
+		sessionStorage.clear(); 
+		localStorage.removeItem('userData');
 		navigate('/login');
 	};
 
@@ -28,21 +29,21 @@ export const UserPanel = () => {
 				<>
 					<Button
 						onClick={handleGoToSettingsPage}
-						className="flex items-center bg-transparent hover:bg-gray-100 !p-0 rounded-lg transition-colors duration-200"
+						className="flex items-center bg-transparent hover:bg-gray-100 !p-0 rounded-lg transition-colors duration-200 flex-1 min-w-0"
 					>
 						<img
 							src={user.avatar || avatar}
 							alt="Avatar"
-							className="w-10 h-10 rounded-full object-cover border-gray-20 shadow-sm"
+							className="w-10 h-10 rounded-full object-cover border-gray-20 shadow-sm flex-shrink-0"
 						/>
-						<span className="ml-2 text-gray-700 hover:text-gray-900 font-medium">
+						<span className="ml-2 text-gray-700 hover:text-gray-900 font-medium truncate">
 							{userLogin}
 						</span>
 					</Button>
 
 					<Button
 						onClick={handleLogout}
-						className="bg-transparent hover:bg-gray-100 !p-2 rounded-lg transition-colors duration-200"
+						className="bg-transparent hover:bg-gray-100 !p-2 rounded-lg transition-colors duration-200 flex-shrink-0"
 						title="Logout"
 					>
 						<Icon
@@ -54,7 +55,7 @@ export const UserPanel = () => {
 			) : (
 				<Link
 					to="/login"
-					className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium"
+					className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium whitespace-nowrap"
 				>
 					Вход
 				</Link>

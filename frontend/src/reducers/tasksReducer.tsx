@@ -32,8 +32,6 @@ export const tasksReducer = (state = initialState, action) => {
 				// Теперь всегда используем id
 				const taskId = action.payload.id;
 
-				console.log('Adding task to state with ID:', taskId);
-
 				return {
 					...state,
 					byId: {
@@ -43,7 +41,6 @@ export const tasksReducer = (state = initialState, action) => {
 					allIds: [...state.allIds, taskId],
 				};
 			}
-			console.log('ADD_TASK: payload is invalid - no id found');
 			return state;
 
 		case ACTION_TYPE.UPDATE_TASK:

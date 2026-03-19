@@ -6,7 +6,7 @@ type Props = {
 
 export const PageLayout = ({ children }: Props) => {
 	return (
-		<div className="flex flex-col min-h-screen max-w-[1000px] mx-auto bg-gray-100">
+		<div className="flex flex-row min-h-screen max-w-full mx-auto bg-gray-100">
 			{children}
 		</div>
 	);

@@ -8,18 +8,48 @@ export default defineConfig({
 	plugins: [react(), svgr(), tailwindcss()],
 	server: {
 		proxy: {
-			'/api': 'http://localhost:3001',
-			'/auth': 'http://localhost:3001',
-			'/project': 'http://localhost:3001',
-			'/time': 'http://localhost:3001',
-			'/user': 'http://localhost:3001',
+			'/api': {
+				target: 'http://localhost:3001',
+				changeOrigin: true, // ← Добавить
+			},
+			'/auth': {
+				target: 'http://localhost:3001',
+				changeOrigin: true,
+			},
+			'/project': {
+				target: 'http://localhost:3001',
+				changeOrigin: true,
+			},
+			'/time': {
+				target: 'http://localhost:3001',
+				changeOrigin: true,
+			},
+			'/user': {
+				target: 'http://localhost:3001',
+				changeOrigin: true,
+			},
 			'/uploads': {
 				target: 'http://localhost:3001',
 				changeOrigin: true,
 				secure: false,
 			},
-
-			// и другие, если нужно
 		},
 	},
 });
+
+// server: {
+// 		proxy: {
+// 			'/api': 'http://localhost:3001',
+// 			'/auth': 'http://localhost:3001',
+// 			'/project': 'http://localhost:3001',
+// 			'/time': 'http://localhost:3001',
+// 			'/user': 'http://localhost:3001',
+// 			'/uploads': {
+// 				target: 'http://localhost:3001',
+// 				changeOrigin: true,
+// 				secure: false,
+// 			},
+
+// 			// и другие, если нужно
+// 		},
+// 	},

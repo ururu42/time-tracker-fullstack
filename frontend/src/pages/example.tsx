@@ -13,8 +13,6 @@ export const LoginPage = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	console.log('login:', login, 'password:', password);
-
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 

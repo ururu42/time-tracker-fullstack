@@ -9,8 +9,6 @@ export const EditProject = () => {
 	const currentProject = useSelector(selectCurrentProject);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	console.log(currentProject.id);
-
 	const [newTitle, setNewTitle] = useState('');
 	const [newDescription, setNewDescription] = useState('');
 

@@ -8,7 +8,6 @@ export const removeProjectAsync = (projectId) => {
 				credentials: 'include',
 			});
 			const result = await response.json();
-			console.log(result);
 			dispatch({ type: ACTION_TYPE.DELETE_PROJECT, payload: projectId });
 		} catch (e) {
 			console.error('Server error', e);
