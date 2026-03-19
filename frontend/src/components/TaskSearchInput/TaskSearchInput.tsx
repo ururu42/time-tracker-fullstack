@@ -66,12 +66,12 @@ export const TaskSearchInput = ({
 	}, [debouncedQuery, selectedProject, tasks]);
 
 	const handleAddTask = (title: string) => {
-		const newTask = await dispatch(
+		const newTask = dispatch(
 			addTaskAsync({ title, description, projectId: selectedProject }),
 		);
 
 		setSelectedTask(newTask);
-		setDescription("")
+		setDescription('');
 		setSearchQuery(title);
 		setShowSuggestions(false);
 	};
