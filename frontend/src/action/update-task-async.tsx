@@ -1,18 +1,13 @@
 import { ACTION_TYPE } from './action-type';
 
-export const updateTaskAsync = (taskId, title, description, status, priority) => {
+export const updateTaskAsync = (taskId, updatedFields) => {
 	return async (dispatch) => {
 		try {
 			const response = await fetch(`/api/tasks/${taskId}`, {
 				method: 'PUT',
 				headers: { 'Content-Type': 'application/json;charset=utf-8' },
 				credentials: 'include',
-				body: JSON.stringify({
-					title: title,
-					description: description,
-					status: status,
-					priority: priority,
-				}),
+				body: JSON.stringify(updatedFields),
 			});
 
 			if (!response.ok) {

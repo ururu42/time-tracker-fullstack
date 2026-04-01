@@ -10,3 +10,4 @@ export * from './remove-task-async';
 export * from './fetch-tasks-for-project';
 export * from './update-task-async';
 export * from './save-time-entry-async';
+export * from './fetch-time-entries-async';

@@ -10,11 +10,12 @@ export const TaskSearchInput = ({
 	setDescription,
 	disabled = false,
 	setSelectedTask,
+	searchQuery,
+	setSearchQuery,
 }) => {
 	const tasks = useSelector((state) => selectTasksByProject(state, selectedProject));
 	const dispatch = useDispatch();
 
-	const [searchQuery, setSearchQuery] = useState('');
 	const [debouncedQuery, setDebouncedQuery] = useState('');
 	const [filteredTasks, setFilteredTasks] = useState([]);
 	const [showSuggestions, setShowSuggestions] = useState(false);

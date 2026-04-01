@@ -8,6 +8,10 @@ export const DropDown = ({
 	placeholder = 'Выберите проект',
 	disabled = false,
 	className = '',
+	setSelectedTask,
+	setSearchQuery,
+	setDescriptionTask,
+	selectedProject,
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef(null);
@@ -28,6 +32,11 @@ export const DropDown = ({
 	}, []);
 
 	const handleSelect = (optionValue) => {
+		if (optionValue === '' || optionValue !== selectedProject) {
+			setSelectedTask(null);
+			setSearchQuery('');
+			setDescriptionTask('');
+		}
 		onChange(optionValue);
 		setIsOpen(false);
 	};

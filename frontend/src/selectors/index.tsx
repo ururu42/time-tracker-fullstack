@@ -4,3 +4,6 @@ export * from './select-user';
 export * from './select-current-project';
 export * from './select-tasksByProject';
 export * from './select-current-timeEntry';
+export * from './select-today-time-entries';
+export * from './select-task-by-id';
+export * from './select-tasks';
