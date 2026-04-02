@@ -24,8 +24,6 @@ export const Statistics = () => {
 		}
 	}, [todayTimeEntries]);
 
-	console.log('statsWithPercent', statsWithPercent);
-
 	// Форматировать время (часы:минуты)
 	const formatTotalTime = (ms: number) => {
 		const hours = Math.floor(ms / 3600000);

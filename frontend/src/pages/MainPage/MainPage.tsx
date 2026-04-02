@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Navigate } from 'react-router-dom';
+import { store } from '../../store';
 import {
 	addTaskAsync,
 	fetchProjects,
@@ -125,8 +126,6 @@ export const MainPage = () => {
 		const endTime = new Date();
 		const durationMs = endTime - startTime;
 
-		console.log(durationMs);
-
 		await dispatch(
 			saveTimeEntryAsync({
 				startTime: startTime.toISOString(),
@@ -169,28 +168,26 @@ export const MainPage = () => {
 		setDescriptionTask('');
 	};
 
-	console.log('tasks', tasks);
-
 	const onPlayEntry = async (projectId, taskId, comment) => {
-		console.log('projectId', projectId);
-		const currentTask = tasks.byId[taskId];
+		let currentTask = tasks.byId[taskId];
 
 		if (!currentTask) {
-			const tasks = await dispatch(fetchTasksForProject(projectId));
-			console.log('tasks in onPlay', tasks);
-			// const currentTask = tasks.byId[taskId];
-		}
+			const result = await dispatch(fetchTasksForProject(projectId));
 
-		console.log('currentTask', currentTask);
+			console.log('result', result);
+
+			const updatedState = store.getState();
+
+			currentTask = updatedState.tasks.byId[taskId];
+		}
 		setSelectedProject(projectId);
 		setSelectedTask(currentTask);
+		setSearchQuery(currentTask.title);
 		setTimerComment(comment);
 		setDescriptionTask(currentTask?.description || '');
 
 		startTimer();
 	};
-
-	console.log('selectedTask', selectedTask);
 
 	return (
 		<Main>
@@ -262,7 +259,7 @@ export const MainPage = () => {
 						{saveMessage}
 					</div>
 				)}
-				<TodayTimeEntries onClick={onPlayEntry} />
+				<TodayTimeEntries onClick={onPlayEntry} isPlayTracker={isRunning} />
 				<Statistics />
 			</div>
 		</Main>

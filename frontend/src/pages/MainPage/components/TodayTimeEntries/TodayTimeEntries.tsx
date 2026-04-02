@@ -4,7 +4,7 @@ import { selectTodayTimeEntries } from '../../../../selectors';
 import { fetchTimeEntriesAsync } from '../../../../action';
 import { TodayTimeEntryCard } from './TodayTimeEntryCard/TodayTimeEntryCard';
 
-export const TodayTimeEntries = ({ onClick }) => {
+export const TodayTimeEntries = ({ onClick, isPlayTracker }) => {
 	const todayTimeEntries = useSelector(selectTodayTimeEntries);
 	const dispatch = useDispatch();
 
@@ -12,7 +12,6 @@ export const TodayTimeEntries = ({ onClick }) => {
 		dispatch(fetchTimeEntriesAsync());
 	}, []);
 
-	console.log('todayTimeEntries', todayTimeEntries);
 	return (
 		<div className="col-span-2">
 			<h2 className="text-lg font-semibold text-gray-900 mb-4 ml-4">
@@ -22,6 +21,7 @@ export const TodayTimeEntries = ({ onClick }) => {
 				<TodayTimeEntryCard
 					todayTimeEntries={todayTimeEntries}
 					onClick={onClick}
+					isPlayTracker={isPlayTracker}
 				/>
 				{/* Здесь будет список записей */}
 			</div>

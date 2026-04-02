@@ -49,7 +49,6 @@ export const TaskSearchInput = ({
 
 				const result = await response.json();
 
-				console.log('SEARCH RESULT', result);
 				setFilteredTasks(Array.isArray(result.data) ? result.data : []);
 			} catch (err: any) {
 				if (err.name !== 'AbortError') {

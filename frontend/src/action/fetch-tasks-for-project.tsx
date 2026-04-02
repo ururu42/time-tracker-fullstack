@@ -3,6 +3,7 @@ import { ACTION_TYPE } from './action-type';
 export const fetchTasksForProject = (projectId) => {
 	return async (dispatch) => {
 		try {
+
 			const response = await fetch(`/api/tasks?projectId=${projectId}`, {
 				method: 'GET',
 				credentials: 'include',
@@ -13,6 +14,7 @@ export const fetchTasksForProject = (projectId) => {
 			}
 
 			const result = await response.json();
+			console.log('Result from server:', result);
 
 			const tasksPayload = Array.isArray(result) ? result : (result?.data ?? []);
 
@@ -22,9 +24,6 @@ export const fetchTasksForProject = (projectId) => {
 			});
 		} catch (error) {
 			console.error('Error fetching tasks:', error);
-
-			// опционально — можно задиспатчить ошибку
-			// dispatch({ type: ACTION_TYPE.SET_TASKS_ERROR, payload: error.message });
 		}
 	};
 };
