@@ -1,4 +1,3 @@
-export * from './HeaderMainPage/HeaderMainPage';
 export * from './Main/Main';
 export * from './TrackerButtons/TrackerButtons';
 export * from './TaskTextarea/TaskTextarea';

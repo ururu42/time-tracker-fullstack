@@ -2,3 +2,9 @@ export * from './debounce';
 export * from './formatTimeFromMs';
 export * from './formatTimeRange';
 export * from './calculateProjectStats';
+export * from './getCurrentMonthRange';
+export * from './getLastMonthRange';
+export * from './getThisWeekRange';
+export * from './getTodayRange';
+export * from './groupEntriesByDay';
+export * from './groupEntriesByHours'

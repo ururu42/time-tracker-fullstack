@@ -3,21 +3,20 @@ import { Icon } from '@iconify/react';
 
 export const DropDown = ({
 	options = [],
-	value,
-	onChange,
-	placeholder = 'Выберите проект',
+	selectedProject,
+	setSelectedProject,
+	placeholder = 'Все проекты',
 	disabled = false,
 	className = '',
-	setSelectedTask,
-	setSearchQuery,
-	setDescriptionTask,
-	selectedProject,
+	setSelectedTask = () => {},
+	setSearchQuery = () => {},
+	setDescriptionTask = () => {},
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef(null);
 
-	const selectedOption = options.find((opt) => opt.value === value);
-	const hasValue = value !== '';
+	const selectedOption = options.find((opt) => opt.value === selectedProject);
+	const hasValue = selectedProject !== '';
 
 	// Закрытие при клике вне dropdown
 	useEffect(() => {
@@ -37,69 +36,64 @@ export const DropDown = ({
 			setSearchQuery('');
 			setDescriptionTask('');
 		}
-		onChange(optionValue);
+		setSelectedProject(optionValue);
 		setIsOpen(false);
 	};
 
 	return (
-		<div className="w-64 flex-shrink-0">
-			<label className="block text-sm font-medium text-gray-700 mb-2">
-				Выбор проекта
-			</label>
-			<div ref={dropdownRef} className={`relative w-full ${className}`}>
-				{/* Кнопка dropdown */}
-				<button
-					type="button"
-					onClick={() => !disabled && setIsOpen(!isOpen)}
-					disabled={disabled}
-					className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg border shadow-sm transition-all cursor-pointer ${
-						hasValue
-							? 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700'
-							: 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'
-					} ${disabled ? 'opacity-60 cursor-not-allowed' : ''} ${
-						isOpen ? 'ring-2 ring-indigo-500' : ''
-					}`}
-				>
-					<span className="truncate">
-						{selectedOption ? selectedOption.label : placeholder}
-					</span>
-					<Icon
-						icon="solar:alt-arrow-down-linear"
-						className={`w-5 h-5 transition-transform ${
-							hasValue ? 'text-white' : 'text-gray-400'
-						} ${isOpen ? 'rotate-180' : ''}`}
-					/>
-				</button>
+		<div ref={dropdownRef} className={`relative w-full ${className}`}>
+			{/* Кнопка dropdown */}
+			<button
+				type="button"
+				onClick={() => !disabled && setIsOpen(!isOpen)}
+				disabled={disabled}
+				className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg border shadow-sm transition-all cursor-pointer ${
+					hasValue
+						? 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700'
+						: 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'
+				} ${disabled ? 'opacity-60 cursor-not-allowed' : ''} ${
+					isOpen ? 'ring-2 ring-indigo-500' : ''
+				}`}
+			>
+				<span className="truncate">
+					{selectedOption ? selectedOption.label : placeholder}
+				</span>
+				<Icon
+					icon="solar:alt-arrow-down-linear"
+					className={`w-5 h-5 transition-transform ${
+						hasValue ? 'text-white' : 'text-gray-400'
+					} ${isOpen ? 'rotate-180' : ''}`}
+				/>
+			</button>
 
-				{/* Выпадающий список */}
-				{isOpen && (
-					<div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
-						{/* Опция placeholder (если нужно сбросить выбор) */}
+			{/* Выпадающий список */}
+			{isOpen && (
+				<div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
+					{/* Опция placeholder (если нужно сбросить выбор) */}
+					<button
+						type="button"
+						onClick={() => handleSelect('')}
+						className="w-full px-4 py-2.5 text-left text-gray-700 hover:bg-gray-100 first:rounded-t-lg"
+					>
+						{placeholder}
+					</button>
+					{/* Список опций */}
+					{options.map((option, index) => (
 						<button
+							key={option.value}
 							type="button"
-							onClick={() => handleSelect('')}
-							className="w-full px-4 py-2.5 text-left text-gray-700 hover:bg-gray-100 first:rounded-t-lg"
+							onClick={() => handleSelect(option.value)}
+							className={`w-full px-4 py-2.5 text-left text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors ${
+								option.value === selectedProject
+									? 'bg-indigo-50 text-indigo-600 font-medium'
+									: ''
+							} ${index === options.length - 1 ? 'rounded-b-lg' : ''}`}
 						>
-							{placeholder}
+							{option.label}
 						</button>
-						{/* Список опций */}
-						{options.map((option, index) => (
-							<button
-								key={option.value}
-								type="button"
-								onClick={() => handleSelect(option.value)}
-								className={`w-full px-4 py-2.5 text-left text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors ${
-									option.value === value
-										? 'bg-indigo-50 text-indigo-600 font-medium'
-										: ''
-								} ${index === options.length - 1 ? 'rounded-b-lg' : ''}`}
-							>
-								{option.label}
-							</button>
-						))}
-					</div>
-				)}
-			</div>
+					))}
+				</div>
+			)}
 		</div>
 	);
 };

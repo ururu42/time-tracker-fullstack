@@ -9,10 +9,15 @@ import {
 	updateTaskAsync,
 	saveTimeEntryAsync,
 } from '../../action';
-import { selectProjects, selectUser, selectTaskById, selectTasks } from '../../selectors';
-import { DropDown, TaskSearchInput, Timer } from '../../components';
+import { selectProjects, selectUser, selectTasks } from '../../selectors';
 import {
-	HeaderMainPage,
+	DropDown,
+	TaskSearchInput,
+	Timer,
+	HeaderAllPage,
+	HeaderContainer,
+} from '../../components';
+import {
 	Main,
 	TaskTextarea,
 	TrackerComment,
@@ -191,20 +196,24 @@ export const MainPage = () => {
 
 	return (
 		<Main>
-			<HeaderMainPage user={user} />
+			<HeaderAllPage children={`Привет ${user.name}!`} />
 			<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
 				<div className="flex items-center justify-between mb-6">
-					<DropDown
-						className="w-full"
-						options={projectOptions}
-						value={selectedProject}
-						onChange={setSelectedProject}
-						selectedProject={selectedProject}
-						setSelectedTask={setSelectedTask}
-						setSearchQuery={setSearchQuery}
-						setDescriptionTask={setDescriptionTask}
-						placeholder="Выберите проект"
-					/>
+					<div className="w-64 flex-shrink-0">
+						<label className="block text-sm font-medium text-gray-700 mb-2">
+							Выбор проекта
+						</label>
+						<DropDown
+							className="w-full"
+							options={projectOptions}
+							setSelectedProject={setSelectedProject}
+							selectedProject={selectedProject}
+							setSelectedTask={setSelectedTask}
+							setSearchQuery={setSearchQuery}
+							setDescriptionTask={setDescriptionTask}
+							placeholder="Выберите проект"
+						/>
+					</div>
 
 					{/* Таймер - только UI */}
 					<Timer

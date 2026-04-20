@@ -33,7 +33,7 @@ export const Form = ({
 						className="w-full border border-gray-400 rounded h-30 p-4 mb-2"
 						placeholder={descriptionPlaceholder}
 						value={description}
-						onChange={({ target }) => onDescriptionChange(target.value)}
+						onClick={({ target }) => onDescriptionChange(target.value)}
 					></textarea>
 				</div>
 				<div className="flex justify-center gap-6">

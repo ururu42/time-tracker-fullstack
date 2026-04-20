@@ -53,7 +53,7 @@ export const TodayTimeEntryCard = ({ todayTimeEntries, onClick, isPlayTracker })
 
 									{/* Задача и проект */}
 									<div className="flex-1 mx-4">
-										<p className="text-gray-800 font-medium truncate">
+										<p className="text-gray-800 font-medium break-words">
 											{entry.comment || 'Название задачи'}
 										</p>
 

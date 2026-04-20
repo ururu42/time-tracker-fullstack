@@ -7,7 +7,7 @@ import { Pagination, ProjectList } from './components';
 import { Search } from './components/Search/Search';
 import { PAGINATION_LIMIT } from '../../constants';
 import { debounce } from './utils';
-import { Button } from '../../components';
+import { Button, HeaderAllPage } from '../../components';
 import { Icon } from '@iconify/react';
 
 export const ProjectsPage = () => {
@@ -50,7 +50,7 @@ export const ProjectsPage = () => {
 			<div className="w-full">
 				{/* Заголовок страницы */}
 				<div className="flex items-center justify-between mb-4">
-					<h1 className="text-3xl font-bold text-gray-900">Проекты</h1>
+					<HeaderAllPage children={'Проекты'} />
 					<Link to="/projects/create">
 						<Button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors">
 							<Icon icon="solar:plus-circle-bold" className="w-5 h-5" />

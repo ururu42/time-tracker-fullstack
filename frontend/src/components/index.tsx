@@ -11,5 +11,5 @@ export * from './Textarea/Textarea';
 export * from './Form/Form';
 export * from './Go-Back-Button.tsx/GoBackButton';
 export * from './TaskSearchInput/TaskSearchInput';
-export * from './Timer/Timer'
-
+export * from './Timer/Timer';
+export * from './HeaderAllPage/HeaderAllPage';
