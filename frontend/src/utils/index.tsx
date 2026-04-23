@@ -7,4 +7,6 @@ export * from './getLastMonthRange';
 export * from './getThisWeekRange';
 export * from './getTodayRange';
 export * from './groupEntriesByDay';
-export * from './groupEntriesByHours'
+export * from './groupEntriesByHours';
+export * from './getDateRange';
+export * from './getChartData';

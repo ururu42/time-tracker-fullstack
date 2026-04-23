@@ -1,14 +1,29 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Main, HeaderAllPage } from '../../components';
-import { HeaderAnalytics, ProjectDistribution, DymanicBarChart } from './components';
-import { selectProjects } from '../../selectors';
+import {
+	HeaderAnalytics,
+	ProjectDistribution,
+	DymanicBarChart,
+	TimeEntriesList,
+} from './components';
+import { selectProjects, selectTimeEntries } from '../../selectors';
 import { fetchTimeEntriesAsync } from '../../action';
+import {
+	calculateProjectStats,
+	groupEntriesByDay,
+	groupEntriesByHours,
+	getDateRange,
+	getChartData,
+} from '../../utils';
 
 export const AnalyticsPage = () => {
 	const [selectedPeriod, setSelectedPeriod] = useState('current-month');
 	const [selectedProject, setSelectedProject] = useState(null);
 	const [customDateRange, setCustomDateRange] = useState({});
+	const timeEntries = useSelector(selectTimeEntries);
+	const [chartData, setChartData] = useState([]);
+	const [totalDuration, setTotalDuration] = useState(0);
 
 	const dispatch = useDispatch();
 
@@ -30,7 +45,27 @@ export const AnalyticsPage = () => {
 		}
 	};
 
-	console.log('customDateRange', customDateRange);
+	useEffect(() => {
+		const { startDate, endDate } = getDateRange(selectedPeriod, customDateRange);
+
+		const start = new Date(startDate).getTime();
+		const end = new Date(endDate).getTime();
+
+		const filteredByDate = timeEntries.filter((entry) => {
+			const time = new Date(entry.startTime).getTime();
+			return time >= start && time <= end;
+		});
+
+		const chartData = getChartData(
+			filteredByDate,
+			selectedProject,
+			selectedPeriod,
+			startDate,
+			endDate,
+		);
+
+		setChartData(chartData);
+	}, [timeEntries, selectedPeriod, selectedProject, customDateRange]);
 
 	return (
 		<Main>
@@ -53,15 +88,10 @@ export const AnalyticsPage = () => {
 					/>
 				</div>
 				<div className="w-full min-w-0">
-					<DymanicBarChart
-						selectedPeriod={selectedPeriod}
-						selectedProject={selectedProject}
-						customDateRange={customDateRange}
-						projects={projects}
-					/>
-					<div>Топ 5 задач</div>
+					<DymanicBarChart chartData={chartData} />
 				</div>
 			</div>
+			<TimeEntriesList />
 		</Main>
 	);
 };
