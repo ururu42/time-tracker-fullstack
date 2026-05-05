@@ -6,7 +6,7 @@ export const TaskTextarea = ({ description, setDescription, disabled = false }) 
 			</label>
 			<textarea
 				value={description}
-				onClick={(e) => setDescription(e.target.value)}
+				onChange={(e) => setDescription(e.target.value)}
 				placeholder={
 					disabled ? 'Сначала выберите проект' : 'Поиск или название задачи...'
 				}

@@ -10,3 +10,5 @@ export * from './groupEntriesByDay';
 export * from './groupEntriesByHours';
 export * from './getDateRange';
 export * from './getChartData';
+export * from './groupEntriesByProject';
+export * from './formatTimeFromDate';

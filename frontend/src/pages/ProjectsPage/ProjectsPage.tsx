@@ -22,19 +22,16 @@ export const ProjectsPage = () => {
 	if (!user || !user.id) {
 		return <Navigate to="/login" replace />;
 	}
-	//странный useEffect, как будто это экшен, надо разобраться
 
 	useEffect(() => {
 		const fetchProjectsWithLastPage = async () => {
 			const returnedLastPage = await dispatch(
 				fetchProjects(page, PAGINATION_LIMIT, searchPhrase),
 			);
-
 			if (returnedLastPage !== undefined) {
 				setLastPage(returnedLastPage);
 			}
 		};
-
 		fetchProjectsWithLastPage();
 	}, [dispatch, page, shouldSearch]);
 
@@ -46,35 +43,56 @@ export const ProjectsPage = () => {
 	};
 
 	return (
-		<main className="flex-1 p-2 overflow-auto bg-gray-50">
-			<div className="w-full">
-				{/* Заголовок страницы */}
-				<div className="flex items-center justify-between mb-4">
-					<HeaderAllPage children={'Проекты'} />
+		// Фон страницы делаем чуть серым, как в MainPage
+		<main className="flex-1 p-6 overflow-auto bg-[#f9fafb]">
+			<div className="max-w-6xl mx-auto">
+				{/* Шапка страницы: выравниваем по высоте и стилю */}
+				<div className="flex items-center justify-between mb-8">
+					<div className="flex items-center gap-3">
+						<div className="p-2 bg-green-800 rounded-lg shadow-sm">
+							<Icon
+								icon="solar:widget-2-bold"
+								className="w-6 h-6 text-white"
+							/>
+						</div>
+						<HeaderAllPage>Проекты</HeaderAllPage>
+					</div>
+
 					<Link to="/projects/create">
-						<Button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors">
-							<Icon icon="solar:plus-circle-bold" className="w-5 h-5" />
-							Добавить проект
-						</Button>
+						<div className="flex items-center justify-center w-8 h-8 bg-white rounded-full">
+							<Icon
+								icon="solar:add-circle-bold"
+								className="text-emerald-600 w-full h-full"
+							/>
+						</div>
 					</Link>
 				</div>
 
-				{/* Карточка с контентом */}
-				<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-					{/* Поиск */}
-					<div className="mb-6">
-						<Search onChange={onSearch} searchPhrase={searchPhrase} />
+				{/* Основной контейнер-карточка */}
+				<div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+					{/* Поле поиска (делаем с отступами как в макете) */}
+					<div className="p-6 border-b border-gray-50 bg-white">
+						<div className="max-w-md">
+							<Search onChange={onSearch} searchPhrase={searchPhrase} />
+						</div>
 					</div>
 
 					{/* Список проектов */}
-					<div className="mb-8">
+					<div className="p-6">
+						{/* Внутри ProjectList убедись, что карточки проектов используют те же стили indigo-600 */}
 						<ProjectList projects={projects} />
 					</div>
 
-					{/* Пагинация */}
-					<div className="flex justify-center">
-						<Pagination setPage={setPage} page={page} lastPage={lastPage} />
-					</div>
+					{/* Подвал с пагинацией */}
+					{lastPage > 1 && (
+						<div className="px-6 py-4 bg-gray-50/50 border-t border-gray-50 flex justify-center">
+							<Pagination
+								setPage={setPage}
+								page={page}
+								lastPage={lastPage}
+							/>
+						</div>
+					)}
 				</div>
 			</div>
 		</main>

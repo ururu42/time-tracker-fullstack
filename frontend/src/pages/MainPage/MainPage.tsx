@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 import { store } from '../../store';
 import {
 	addTaskAsync,
@@ -15,7 +15,7 @@ import {
 	TaskSearchInput,
 	Timer,
 	HeaderAllPage,
-	HeaderContainer,
+	Button,
 } from '../../components';
 import {
 	Main,
@@ -53,6 +53,7 @@ export const MainPage = () => {
 	useEffect(() => {
 		dispatch(fetchProjects());
 	}, [dispatch]);
+
 	useEffect(() => {
 		if (selectedProject) dispatch(fetchTasksForProject(selectedProject));
 	}, [dispatch, selectedProject]);
@@ -152,9 +153,7 @@ export const MainPage = () => {
 		setIsRunning(false);
 		setStartTime(null);
 		setTimerComment('');
-
 		setSelectedProject('');
-
 		setSelectedTask(null);
 		setSearchQuery('');
 		setDescriptionTask('');
@@ -165,9 +164,7 @@ export const MainPage = () => {
 		setIsRunning(false);
 		setStartTime(null);
 		setTimerComment('');
-
 		setSelectedProject('');
-
 		setSelectedTask(null);
 		setSearchQuery('');
 		setDescriptionTask('');
@@ -177,12 +174,8 @@ export const MainPage = () => {
 		let currentTask = tasks.byId[taskId];
 
 		if (!currentTask) {
-			const result = await dispatch(fetchTasksForProject(projectId));
-
-			console.log('result', result);
-
+			await dispatch(fetchTasksForProject(projectId));
 			const updatedState = store.getState();
-
 			currentTask = updatedState.tasks.byId[taskId];
 		}
 		setSelectedProject(projectId);
@@ -197,36 +190,50 @@ export const MainPage = () => {
 	return (
 		<Main>
 			<HeaderAllPage children={`Привет ${user.name}!`} />
+
 			<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
-				<div className="flex items-center justify-between mb-6">
-					<div className="w-64 flex-shrink-0">
-						<label className="block text-sm font-medium text-gray-700 mb-2">
-							Выбор проекта
-						</label>
-						<DropDown
-							className="w-full"
-							options={projectOptions}
-							setSelectedProject={setSelectedProject}
-							selectedProject={selectedProject}
-							setSelectedTask={setSelectedTask}
-							setSearchQuery={setSearchQuery}
-							setDescriptionTask={setDescriptionTask}
-							placeholder="Выберите проект"
-						/>
+				{/* Контейнер верхней линии */}
+				<div className="flex items-end justify-between mb-6 gap-6">
+					{/* Группировка Дропдауна и Кнопки Добавления */}
+					<div className="flex items-end gap-3 flex-grow max-w-2xl">
+						<div className="w-64 flex-shrink-0">
+							<label className="block text-sm font-medium text-gray-700 mb-2">
+								Выбор проекта
+							</label>
+							<DropDown
+								className="w-full"
+								options={projectOptions}
+								setSelectedProject={setSelectedProject}
+								selectedProject={selectedProject}
+								setSelectedTask={setSelectedTask}
+								setSearchQuery={setSearchQuery}
+								setDescriptionTask={setDescriptionTask}
+								placeholder="Выберите проект"
+							/>
+						</div>
+
+						<Link to="/projects/create">
+							<div className="flex items-center justify-center w-8 h-8 bg-white rounded-full mb-2">
+								<Icon
+									icon="solar:add-circle-bold"
+									className="text-emerald-600 w-full h-full"
+								/>
+							</div>
+						</Link>
 					</div>
 
-					{/* Таймер - только UI */}
+					{/* Таймер */}
 					<Timer
 						elapsedTime={elapsedTime}
 						isRunning={isRunning}
 						startTimer={startTimer}
 						stopTimer={stopTimer}
-						disabled={!selectedProject || !selectedTask}
+						disabled={!selectedProject || (!selectedTask && !searchQuery)}
 					/>
 				</div>
+
 				{selectedProject && (
-					<>
-						{' '}
+					<div className="space-y-4 animate-in fade-in duration-300">
 						<TaskSearchInput
 							selectedProject={selectedProject}
 							description={descriptionTask}
@@ -258,13 +265,17 @@ export const MainPage = () => {
 								/>
 							</>
 						)}
-					</>
+					</div>
 				)}
 			</div>
 
 			<div className="grid grid-cols-3 gap-3">
 				{saveMessage && (
-					<div className="col-span-3 bg-green-100 text-green-800 px-4 py-2 rounded mb-2 shadow-sm">
+					<div className="col-span-3 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl mb-2 shadow-sm flex items-center gap-2">
+						<Icon
+							icon="solar:check-circle-bold"
+							className="w-5 h-5 text-green-500"
+						/>
 						{saveMessage}
 					</div>
 				)}

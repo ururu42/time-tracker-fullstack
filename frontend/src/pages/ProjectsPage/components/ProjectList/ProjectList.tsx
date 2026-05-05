@@ -14,8 +14,8 @@ export const ProjectList = ({ projects }) => {
 						<div className="flex items-center gap-4 flex-1">
 							<div className="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
 								<Icon
-									icon="solar:folder-with-files-bold"
-									className="w-6 h-6 text-indigo-600"
+									icon="solar:layers-bold"
+									className="w-6 h-6 text-green-800"
 								/>
 							</div>
 							<div className="flex flex-col flex-1">
@@ -30,7 +30,10 @@ export const ProjectList = ({ projects }) => {
 						<div className="flex items-center gap-4">
 							{project.taskCount !== undefined && (
 								<span className="flex items-center gap-1.5 text-sm text-gray-500 bg-gray-100 px-3 py-1.5 rounded-full">
-									<Icon icon="solar:clipboard-list-bold" className="w-4 h-4" />
+									<Icon
+										icon="solar:clipboard-list-bold"
+										className="w-4 h-4"
+									/>
 									{project.taskCount} задач
 								</span>
 							)}

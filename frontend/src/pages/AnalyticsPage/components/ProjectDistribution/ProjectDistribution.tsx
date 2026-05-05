@@ -19,19 +19,20 @@ import {
 	Legend,
 	Label,
 } from 'recharts';
+import { COLORS } from '../../../../constants';
 
-const COLORS = [
-	'#6366f1',
-	'#8b5cf6',
-	'#ec4899',
-	'#f43f5e',
-	'#f59e0b',
-	'#10b981',
-	'#0ea5e9',
-	'#64748b',
-	'#ef4444',
-	'#84cc16',
-];
+// const COLORS = [
+// 	'#6366f1',
+// 	'#8b5cf6',
+// 	'#ec4899',
+// 	'#f43f5e',
+// 	'#f59e0b',
+// 	'#10b981',
+// 	'#0ea5e9',
+// 	'#64748b',
+// 	'#ef4444',
+// 	'#84cc16',
+// ];
 const OTHER_COLOR = '#94a3b8'; // Нейтральный серый (slate-400)
 
 export const ProjectDistribution = ({
@@ -76,20 +77,15 @@ export const ProjectDistribution = ({
 		}
 
 		if (selectedPeriod === 'custom' && customDateRange) {
-			console.log('customDateRange', customDateRange);
 			startDate = customDateRange.startDate;
 			endDate = customDateRange.endDate;
 		}
-
-		// console.log('timeEntries', timeEntries);
 
 		const filtederByDate = timeEntries.filter((entry) => {
 			const startTimeinDate = new Date(entry.startTime);
 			return startTimeinDate >= startDate && startTimeinDate <= endDate;
 		});
 
-		console.log('selectedProject', selectedProject);
-		console.log('filtederByDate', filtederByDate);
 		if (!selectedProject) {
 			const { stats, totalDuration } = calculateProjectStats(filtederByDate);
 
@@ -105,17 +101,7 @@ export const ProjectDistribution = ({
 			setStatsWithPercent(stats);
 			setTotalDuration(totalDuration);
 		}
-
-		console.log('startDate', startDate, 'endDate', endDate);
 	}, [timeEntries, selectedPeriod, customDateRange, selectedProject]);
-
-	// console.log('statsWithPercent', statsWithPercent);
-	// console.log('totalDuration', totalDuration);
-
-	// console.log('timeEntries', timeEntries);
-	// console.log('projects', projects);
-
-	console.log('statsWithPercent', statsWithPercent);
 
 	return (
 		<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">

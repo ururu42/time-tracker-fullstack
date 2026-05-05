@@ -64,13 +64,33 @@ export const tasksReducer = (state = initialState, action) => {
 				if (state.byId[action.payload]) {
 					const newState = { ...state };
 					delete newState.byId[action.payload];
+					const objEntr = Object.values(state.byId);
+					console.log('objEntr', objEntr);
 					return {
 						...newState,
 						allIds: state.allIds.filter((id) => id !== action.payload),
 					};
 				}
 			}
+
 			return state;
+
+		// case ACTION_TYPE.DELETE_TASK:
+		// 	const currentTaskId = action.payload;
+
+		// 	const newById = Object.values(state.byId).filter((task) => {
+		// 		return task.id !== currentTaskId;
+		// 	});
+
+		// 	const newAllIds = state.allIds.filter((id) => {
+		// 		return id !== currentTaskId;
+		// 	});
+
+		// 	return {
+		// 		...state,
+		// 		byId: newById,
+		// 		allIds: newAllIds,
+		// 	};
 
 		case ACTION_TYPE.LOGOUT:
 			return initialState;

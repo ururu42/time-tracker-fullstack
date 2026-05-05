@@ -17,7 +17,7 @@ export const Header = () => {
 			<div className="flex flex-col h-full p-4">
 				{/* Логотип */}
 				<Link to="/" className="flex items-center gap-2 mb-8 px-3">
-					<Icon icon="solar:clock-circle-linear" className="w-8 h-8 text-indigo-600" />
+					<Icon icon="solar:clock-circle-linear" className="w-8 h-8 text-green-800" />
 					<span className="text-xl font-semibold text-gray-800">TimeTracker</span>
 				</Link>
 

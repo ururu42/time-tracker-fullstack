@@ -85,7 +85,7 @@ export const TaskSearchInput = ({
 				<input
 					type="text"
 					value={searchQuery}
-					onClick={(e) => setSearchQuery(e.target.value)}
+					onChange={(e) => setSearchQuery(e.target.value)}
 					onFocus={() => {
 						if (!disabled) {
 							setFilteredTasks(tasks);

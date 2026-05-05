@@ -9,13 +9,7 @@ import {
 } from './components';
 import { selectProjects, selectTimeEntries } from '../../selectors';
 import { fetchTimeEntriesAsync } from '../../action';
-import {
-	calculateProjectStats,
-	groupEntriesByDay,
-	groupEntriesByHours,
-	getDateRange,
-	getChartData,
-} from '../../utils';
+import { getDateRange, getChartData } from '../../utils';
 
 export const AnalyticsPage = () => {
 	const [selectedPeriod, setSelectedPeriod] = useState('current-month');
@@ -23,7 +17,7 @@ export const AnalyticsPage = () => {
 	const [customDateRange, setCustomDateRange] = useState({});
 	const timeEntries = useSelector(selectTimeEntries);
 	const [chartData, setChartData] = useState([]);
-	const [totalDuration, setTotalDuration] = useState(0);
+	const [filteredEntriesList, setFilteredEntriesList] = useState([]);
 
 	const dispatch = useDispatch();
 
@@ -64,7 +58,14 @@ export const AnalyticsPage = () => {
 			endDate,
 		);
 
+		const filteredEntries = selectedProject
+			? filteredByDate.filter(
+					(entry) => entry.projectId.toString() === selectedProject,
+				)
+			: filteredByDate;
+
 		setChartData(chartData);
+		setFilteredEntriesList(filteredEntries);
 	}, [timeEntries, selectedPeriod, selectedProject, customDateRange]);
 
 	return (
@@ -91,7 +92,11 @@ export const AnalyticsPage = () => {
 					<DymanicBarChart chartData={chartData} />
 				</div>
 			</div>
-			<TimeEntriesList />
+			<TimeEntriesList
+				filteredEntriesList={filteredEntriesList}
+				selectedProject={selectedProject}
+				projects={projects}
+			/>
 		</Main>
 	);
 };

@@ -29,6 +29,31 @@ export const timeEntriesReducer = (state = initialTimeEntriesState, action) => {
 				...state,
 				entries: action.payload,
 			};
+
+		case ACTION_TYPE.UPDATE_TIME_ENTRY: {
+			const updated = action.payload;
+
+			if (!updated || !updated.id) return state;
+
+			return {
+				...state,
+				entries: state.entries.map((entry) =>
+					entry.id === updated.id ? { ...entry, ...updated } : entry,
+				),
+			};
+		}
+
+		case ACTION_TYPE.DELETE_TIME_ENTRY: {
+			const currentId = action.payload;
+
+			const newState = state.entries.filter((entry) => entry.id !== currentId);
+
+			return {
+				...state,
+				entries: newState,
+			};
+		}
+
 		default:
 			return state;
 	}

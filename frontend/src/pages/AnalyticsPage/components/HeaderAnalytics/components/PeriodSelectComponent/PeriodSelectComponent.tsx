@@ -13,7 +13,6 @@ export const PeriodSelectComponent = ({
 		const newStart = target.value;
 
 		setStartDate(newStart);
-		console.log('STARTDATE IS ACTIVE');
 
 		if (newStart && endDate) {
 			onCustomDateChange({
@@ -26,7 +25,6 @@ export const PeriodSelectComponent = ({
 		const newEnd = target.value;
 
 		setEndDate(newEnd);
-		console.log('ENDDATE IS ACTIVE');
 
 		if (startDate && newEnd) {
 			onCustomDateChange({
