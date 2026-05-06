@@ -1,17 +1,20 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { selectTimeEntries } from '../../../../../../../../../../selectors';
 import {
 	formatTimeFromDate,
 	formatTimeFromMs,
 } from '../../../../../../../../../../utils';
 import { EditingCommentTask } from './EditingCommetTask/EditingCommentTask';
+import { removeTimeEntriesAsync } from '../../../../../../../../../../action';
 import { Icon } from '@iconify/react';
 
 export const CommentListForTask = ({ tasksByProject, task }) => {
 	const timeEntries = useSelector(selectTimeEntries);
 	const [editingCommentId, setEditingCommentId] = useState(null);
 	const [editCommentDiscription, setEditCommentDiscription] = useState(null);
+
+	const dispatch = useDispatch();
 
 	const filteredTimeEntriesByProject = timeEntries.filter(
 		(entry) => entry.projectId === tasksByProject?.[0]?.projectId,
@@ -26,6 +29,12 @@ export const CommentListForTask = ({ tasksByProject, task }) => {
 	const startEditing = (entry) => {
 		setEditingCommentId(entry.id);
 		setEditCommentDiscription(entry.comment || '');
+	};
+
+	const onCommentRemove = (entryId) => {
+		if (window.confirm('Действительно удалить коментарий времени?')) {
+			dispatch(removeTimeEntriesAsync(entryId));
+		}
 	};
 
 	return (

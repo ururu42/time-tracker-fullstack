@@ -12,3 +12,4 @@ export * from './update-task-async';
 export * from './save-time-entry-async';
 export * from './fetch-time-entries-async';
 export * from './update-task-comment-async';
+export * from './remove-time-entries-async';

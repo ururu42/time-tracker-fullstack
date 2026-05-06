@@ -38,7 +38,7 @@ export const tasksReducer = (state = initialState, action) => {
 						...state.byId,
 						[taskId]: action.payload,
 					},
-					allIds: [...state.allIds, taskId],
+					allIds: [taskId, ...state.allIds],
 				};
 			}
 			return state;
