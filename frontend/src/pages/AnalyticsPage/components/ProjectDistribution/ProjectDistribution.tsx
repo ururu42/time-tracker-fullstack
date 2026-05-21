@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectTimeEntries } from '../../../../selectors';
-import { fetchTimeEntriesAsync } from '../../../../action';
 import {
 	calculateProjectStats,
 	formatTimeFromMs,
@@ -21,25 +20,12 @@ import {
 } from 'recharts';
 import { COLORS } from '../../../../constants';
 
-// const COLORS = [
-// 	'#6366f1',
-// 	'#8b5cf6',
-// 	'#ec4899',
-// 	'#f43f5e',
-// 	'#f59e0b',
-// 	'#10b981',
-// 	'#0ea5e9',
-// 	'#64748b',
-// 	'#ef4444',
-// 	'#84cc16',
-// ];
 const OTHER_COLOR = '#94a3b8'; // Нейтральный серый (slate-400)
 
 export const ProjectDistribution = ({
 	selectedPeriod,
 	selectedProject,
 	customDateRange,
-	projects,
 }) => {
 	const timeEntries = useSelector(selectTimeEntries);
 	const [statsWithPercent, setStatsWithPercent] = useState([]);
@@ -93,7 +79,7 @@ export const ProjectDistribution = ({
 			setTotalDuration(totalDuration);
 		} else {
 			const currentProjectByDate = filtederByDate.filter((entry) => {
-				return entry.projectId.toString() === selectedProject;
+				return entry.projectId?.toString() === selectedProject;
 			});
 
 			const { stats, totalDuration } = calculateProjectStats(currentProjectByDate);

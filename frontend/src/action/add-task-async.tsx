@@ -15,12 +15,15 @@ export const addTaskAsync = (taskData) => {
 			}
 
 			const addedTask = await response.json();
-			console.log('Задача добавлена, ответ от сервера:', addedTask.data);
+			// console.log('Задача добавлена, ответ от сервера:', addedTask.data);
 
 			dispatch({ type: ACTION_TYPE.ADD_TASK, payload: addedTask.data });
 			return addedTask.data;
 		} catch (e) {
 			console.error('Server error', e);
+			throw e;
+		} finally {
+			dispatch({ type: ACTION_TYPE.SET_LOADING, payload: false });
 		}
 	};
 };

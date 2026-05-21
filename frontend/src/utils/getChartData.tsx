@@ -12,10 +12,13 @@ export const getChartData = (
 	let chartData = [];
 
 	if (selectedProject && selectedPeriod === 'today') {
-		chartData = groupEntriesByHours(filteredByDate);
+		const currentProjectByDate = filteredByDate.filter((entry) => {
+			return entry.projectId && entry.projectId.toString() === selectedProject;
+		});
+		chartData = groupEntriesByHours(currentProjectByDate);
 	} else if (selectedProject) {
 		const currentProjectByDate = filteredByDate.filter((entry) => {
-			return entry.projectId.toString() === selectedProject;
+			return entry.projectId && entry.projectId.toString() === selectedProject;
 		});
 
 		chartData = groupEntriesByDay(currentProjectByDate, startDate, endDate);

@@ -1,11 +1,13 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../../action';
-import { Button } from '../../components';
+import { setUser, ACTION_TYPE } from '../../action';
+import { Button, Loader } from '../../components';
+import { selectIsLoading } from '../../selectors';
 
 const authFormSchema = yup.object().shape({
 	login: yup
@@ -40,16 +42,17 @@ export const LoginPage = () => {
 		resolver: yupResolver(authFormSchema),
 	});
 
-	const [loading, setLoading] = useState(false);
 	const [serverError, setServerError] = useState<string | null>(null);
 	const formError = errors?.login?.message || errors?.password?.message;
 	const errorMessage = formError || serverError;
+
+	const isLoading = useSelector(selectIsLoading);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const onSubmit = async ({ login, password }) => {
-		setLoading(true);
+		dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
 		setServerError(null);
 
 		try {
@@ -72,56 +75,55 @@ export const LoginPage = () => {
 		} catch (err) {
 			setServerError('Network error. Please try again');
 		} finally {
-			setLoading(false);
+			dispatch({ type: ACTION_TYPE.SET_LOADING, payload: false });
 		}
 	};
 
 	return (
-		<div className="min-h-screen flex justify-center items-baseline">
+		<div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+			{isLoading && <Loader />}
 			<form
 				onSubmit={handleSubmit(onSubmit)}
-				className="bg-white w-full max-w-md rounded-md shadow-xl p-6 space-y-6 "
+				className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-6"
 			>
-				<h4 className="text-xl font-semibold text-center text-gray-800">
-					Sign in to your account
+				<h4 className="text-2xl font-bold text-center text-gray-800">
+					Вход в аккаунт
 				</h4>
-
-				<label className="block">
-					<span className="text-sm font-normal text-gray-700">Login</span>
+				<label className="block space-y-1">
+					<span className="text-sm text-gray-600">Логин</span>
 					<input
 						type="text"
-						placeholder="Enter your login"
+						placeholder="Введите логин"
 						{...register('login')}
-						className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+						className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
 					/>
 				</label>
-
-				<label className="block">
-					<span className="text-sm font-normal text-gray-700">Password</span>
+				<label className="block space-y-1">
+					<span className="text-sm text-gray-600">Пароль</span>
 					<input
 						type="password"
+						placeholder="Введите пароль"
 						{...register('password')}
-						placeholder="Enter your password"
-						className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-800 placeholder-gray-40 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+						className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
 					/>
 				</label>
-
 				<Button
 					type="submit"
-					disabled={loading}
-					className="w-full rounded-md font-semibold hover:bg-blue-600 hover:shadow-md active:bg-blue-700"
+					disabled={isLoading}
+					className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-sm transition-all font-medium"
 				>
-					{loading ? 'Signing in...' : 'Sign in'}
+					{isLoading ? 'Загружаем...' : 'Войти'}
 				</Button>
 				<Link
 					to="/register"
-					className="block w-full text-center text-base text-blue-600 hover:text-blue-500 hover:underline"
+					className="block text-center text-sm text-gray-500 hover:text-emerald-600 transition"
 				>
-					Register
+					Нет аккаунта? Регистрация
 				</Link>
-
 				{errorMessage && (
-					<p className="text-sm text-red-700 text-center">{errorMessage}</p>
+					<div className="text-sm text-red-600 text-center bg-red-50 border border-red-100 rounded-xl py-2">
+						{errorMessage}
+					</div>
 				)}
 			</form>
 		</div>

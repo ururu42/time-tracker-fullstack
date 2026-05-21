@@ -23,6 +23,8 @@ export const fetchTimeEntriesAsync = () => {
 
 			// опционально — можно задиспатчить ошибку
 			// dispatch({ type: ACTION_TYPE.SET_TASKS_ERROR, payload: error.message });
+		} finally {
+			dispatch({ type: ACTION_TYPE.SET_LOADING, payload: false });
 		}
 	};
 };

@@ -2,10 +2,12 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { ACTION_TYPE, setUser } from '../../action';
+import { setUser, ACTION_TYPE } from '../../action';
+import { selectIsLoading } from '../../selectors';
 import { Button } from '../../components/Button/Button';
+import { Loader } from '../../components';
 
 const regFormSchema = yup.object().shape({
 	login: yup
@@ -41,7 +43,7 @@ export const Registration = () => {
 		},
 		resolver: yupResolver(regFormSchema),
 	});
-	const [loading, setLoading] = useState(false);
+	const isLoading = useSelector(selectIsLoading);
 	const [serverError, setServerError] = useState<string | null>(null);
 	const formError = errors?.login?.message || errors?.password?.message;
 	const errorMessage = formError || serverError;
@@ -50,7 +52,7 @@ export const Registration = () => {
 	const navigate = useNavigate();
 
 	const onSubmit = async ({ login, password }) => {
-		setLoading(true);
+		dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
 		setServerError(null);
 
 		try {
@@ -73,64 +75,68 @@ export const Registration = () => {
 		} catch (err) {
 			setServerError('Network error. Please try again');
 		} finally {
-			setLoading(false);
+			dispatch({ type: ACTION_TYPE.SET_LOADING, payload: false });
 		}
 	};
 
 	return (
-		<div className="min-h-screen flex justify-center items-baseline">
+		<div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+			{isLoading && <Loader />}
 			<form
 				onSubmit={handleSubmit(onSubmit)}
-				className="bg-white w-full max-w-md rounded-md shadow-xl p-6 space-y-6 "
+				className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-6"
 			>
-				<h4 className="text-xl font-semibold text-center text-gray-800">
-					Registration
+				<h4 className="text-2xl font-bold text-center text-gray-800">
+					Регистрация
 				</h4>
-
-				<label className="block">
-					<span className="text-sm font-normal text-gray-700">Login</span>
+				<label className="block space-y-1">
+					<span className="text-sm text-gray-600">Логин</span>
 					<input
 						type="text"
-						placeholder="Enter your login"
+						placeholder="Введите логин"
 						{...register('login', { onChange: () => setServerError(null) })}
-						className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+						className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
 					/>
 				</label>
-
-				<label className="block">
-					<span className="text-sm font-normal text-gray-700">Password</span>
+				<label className="block space-y-1">
+					<span className="text-sm text-gray-600">Пароль</span>
 					<input
 						type="password"
+						placeholder="Введите пароль"
 						{...register('password', {
 							onChange: () => setServerError(null),
 						})}
-						placeholder="Enter your password"
-						className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-800 placeholder-gray-40 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+						className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
 					/>
 				</label>
-
-				<label className="block">
-					<span className="text-sm font-normal text-gray-700">Passcheck</span>
+				<label className="block space-y-1">
+					<span className="text-sm text-gray-600">Повтор пароля</span>
 					<input
 						type="password"
+						placeholder="Повторите пароль"
 						{...register('passcheck', {
 							onChange: () => setServerError(null),
 						})}
-						placeholder="Enter your passcheck"
-						className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-800 placeholder-gray-40 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+						className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
 					/>
 				</label>
-
 				<Button
 					type="submit"
-					disabled={loading}
-					className="w-full rounded-md font-semibold hover:bg-blue-600 hover:shadow-md active:bg-blue-700"
+					disabled={isLoading}
+					className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-sm transition-all font-medium"
 				>
-					{loading ? 'Registering...' : 'Register'}
+					{isLoading ? 'Регистрация...' : 'Создать аккаунт'}
 				</Button>
-
+				<Link
+					to="/login"
+					className="block text-center text-sm text-gray-500 hover:text-emerald-600 transition"
+				>
+					Уже есть аккаунт? Войти
+				</Link>
 				{errorMessage && (
-					<p className="text-sm text-red-700 text-center">{errorMessage}</p>
+					<div className="text-sm text-red-600 text-center bg-red-50 border border-red-100 rounded-xl py-2">
+						{errorMessage}
+					</div>
 				)}
 			</form>
 		</div>

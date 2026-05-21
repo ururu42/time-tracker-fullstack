@@ -11,6 +11,8 @@ export const removeProjectAsync = (projectId) => {
 			dispatch({ type: ACTION_TYPE.DELETE_PROJECT, payload: projectId });
 		} catch (e) {
 			console.error('Server error', e);
+		} finally {
+			dispatch({ type: ACTION_TYPE.SET_LOADING, payload: false });
 		}
 	};
 };

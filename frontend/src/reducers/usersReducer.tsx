@@ -1,7 +1,7 @@
 import { ACTION_TYPE } from '../action';
 
 const initialUsersState = {
-	items: [], // Array of users
+	items: [], 
 	loading: false,
 	error: null,
 };

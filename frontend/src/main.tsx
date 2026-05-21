@@ -6,7 +6,6 @@ import './index.css';
 import App from './App.jsx';
 import { store } from './store';
 
-
 const rootElement: HTMLElement = document.getElementById('root') as HTMLElement;
 createRoot(rootElement).render(
 	<StrictMode>

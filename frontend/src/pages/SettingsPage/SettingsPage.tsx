@@ -1,87 +1,97 @@
 import { useSelector } from 'react-redux';
 import { selectUserLogin, selectUser } from '../../selectors';
-import { Button, H1, P } from '../../components';
+import { Button, HeaderAllPage } from '../../components';
 import { EditSettingsPage } from './components/EditSettingsPage/EditSettingsPage';
-import avatar from '../../img-test/8e09097b-66c5-4bac-83a2-02779c3c1f4e.jpeg';
 import { useState } from 'react';
+import { Icon } from '@iconify/react';
 
 export const SettingsPage = () => {
 	const userLogin = useSelector(selectUserLogin);
 	const user = useSelector(selectUser);
 	const [isEdit, setIsEdit] = useState(false);
 
-	const handlerEditUser = () => {
-		setIsEdit(true);
-	};
+	const [previewUrl, setPreviewUrl] = useState(null);
+	const [removeAvatar, setRemoveAvatar] = useState(false);
+	const avatarSrc = removeAvatar ? null : previewUrl || user.avatar;
 
 	return (
-		<div>
-			<div className="max-w-6xl mx-auto">
-				<div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-8 text-white rounded-t-2xl">
-					<h1 className="text-4xl font-bold">Настройки аккаунта</h1>
-					<p className="opacity-90 mt-2">{userLogin}</p>
-				</div>
-
-				<div className="p-8 bg-white rounded-b-2xl shadow-md">
-					{isEdit ? (
-						<EditSettingsPage user={user} setIsEdit={setIsEdit} />
-					) : (
-						<div>
-							<div className="flex flex-col md:flex-row gap-8 mb-8">
-								<div className="flex-shrink-0">
-									<img
-										src={user.avatar || avatar}
-										alt="Avatar"
-										className="w-64 h-64 rounded-xl object-cover border-4 border-white shadow-lg"
+		<main className=" flex-1 p-6 min-h-screen bg-gray-50 ">
+			<HeaderAllPage>Настройки аккаунта</HeaderAllPage>
+			<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
+				<p className="text-gray-600">Вы вошли как</p>
+				<p className="text-lg font-semibold text-gray-900">{userLogin}</p>
+			</div>
+			<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+				{isEdit ? (
+					<EditSettingsPage
+						user={user}
+						setIsEdit={setIsEdit}
+						avatarSrc={avatarSrc}
+						removeAvatar={removeAvatar}
+						setRemoveAvatar={setRemoveAvatar}
+						previewUrl={previewUrl}
+						setPreviewUrl={setPreviewUrl}
+					/>
+				) : (
+					<div className="space-y-6">
+						<div className="flex flex-col md:flex-row gap-8">
+							{avatarSrc ? (
+								<img
+									src={avatarSrc}
+									alt="Avatar preview"
+									className="w-48 h-48 md:w-56 md:h-56 rounded-2xl object-cover border-4 border-white shadow-md"
+								/>
+							) : (
+								<div className="w-48 h-48 md:w-56 md:h-56 rounded-2xl bg-gray-100 border-4 border-white shadow-md flex items-center justify-center">
+									<Icon
+										icon="solar:crown-line-duotone"
+										className="w-20 h-20 text-gray-400"
 									/>
 								</div>
+							)}
+							<div className="flex-1  rounded-2xl p-6 border border-gray-200">
+								<div className="space-y-5">
+									<div className="flex justify-between items-center">
+										<span className="text-gray-500">Login</span>
+										<span className="font-medium text-gray-900">
+											{user.login}
+										</span>
+									</div>
 
-								<div className="flex-1 bg-gray-50 p-6 rounded-xl shadow-sm">
-									<div className="space-y-4">
-										<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-											<span className="font-semibold text-gray-700">
-												Login:
-											</span>
-											<span className="font-medium text-gray-900">
-												{user.login}
-											</span>
-										</div>
+									<div className="flex justify-between items-center">
+										<span className="text-gray-500">
+											Имя пользователя
+										</span>
+										<span className="font-medium text-gray-900">
+											{user.name || '—'}
+										</span>
+									</div>
 
-										<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-											<span className="font-semibold text-gray-700">
-												Имя пользователя:
-											</span>
-											<span className="font-medium text-gray-900">
-												{user.name || 'отсутствует'}
-											</span>
-										</div>
-
-										<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-											<span className="font-semibold text-gray-700">
-												Дата создания аккаунта:
-											</span>
-											<span className="font-medium text-gray-900">
-												{new Date(
-													user.createdAt,
-												).toLocaleDateString('ru-RU')}
-											</span>
-										</div>
+									<div className="flex justify-between items-center">
+										<span className="text-gray-500">
+											Дата регистрации
+										</span>
+										<span className="font-medium text-gray-900">
+											{new Date(user.createdAt).toLocaleDateString(
+												'ru-RU',
+											)}
+										</span>
 									</div>
 								</div>
 							</div>
-
-							<div className="flex justify-center">
-								<Button
-									onClick={handlerEditUser}
-									className="px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow transition-all duration-200 font-medium"
-								>
-									Редактировать данные пользователя
-								</Button>
-							</div>
 						</div>
-					)}
-				</div>
+						<div className="flex justify-center pt-4">
+							<Button
+								onClick={() => setIsEdit(true)}
+								className="flex items-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-sm transition-all duration-200"
+							>
+								<Icon icon="solar:pen-bold" className="w-5 h-5" />
+								Редактировать
+							</Button>
+						</div>
+					</div>
+				)}
 			</div>
-		</div>
+		</main>
 	);
 };

@@ -29,7 +29,6 @@ export const tasksReducer = (state = initialState, action) => {
 
 		case ACTION_TYPE.ADD_TASK:
 			if (action.payload && action.payload.id) {
-				// Теперь всегда используем id
 				const taskId = action.payload.id;
 
 				return {
@@ -60,12 +59,9 @@ export const tasksReducer = (state = initialState, action) => {
 
 		case ACTION_TYPE.DELETE_TASK:
 			if (action.payload && typeof action.payload === 'string') {
-				// Для DELETE_TASK payload - это ID задачи
 				if (state.byId[action.payload]) {
 					const newState = { ...state };
 					delete newState.byId[action.payload];
-					const objEntr = Object.values(state.byId);
-					console.log('objEntr', objEntr);
 					return {
 						...newState,
 						allIds: state.allIds.filter((id) => id !== action.payload),
@@ -74,23 +70,6 @@ export const tasksReducer = (state = initialState, action) => {
 			}
 
 			return state;
-
-		// case ACTION_TYPE.DELETE_TASK:
-		// 	const currentTaskId = action.payload;
-
-		// 	const newById = Object.values(state.byId).filter((task) => {
-		// 		return task.id !== currentTaskId;
-		// 	});
-
-		// 	const newAllIds = state.allIds.filter((id) => {
-		// 		return id !== currentTaskId;
-		// 	});
-
-		// 	return {
-		// 		...state,
-		// 		byId: newById,
-		// 		allIds: newAllIds,
-		// 	};
 
 		case ACTION_TYPE.LOGOUT:
 			return initialState;

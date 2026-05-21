@@ -1,5 +1,3 @@
-// очень странный редьюсер, по моему не нужен
-
 import { ACTION_TYPE } from '../action';
 
 const initialAppState = {
@@ -10,8 +8,8 @@ const initialAppState = {
 		onConfirm: () => {},
 		onCancel: () => {},
 	},
-	loading: false, // For tracking async operations
-	error: null, // For displaying error messages
+	loading: false,
+	error: null,
 };
 
 export const appReducer = (state = initialAppState, action) => {
@@ -36,6 +34,13 @@ export const appReducer = (state = initialAppState, action) => {
 			return {
 				...initialAppState,
 			};
+
+		case ACTION_TYPE.SET_LOADING:
+			return {
+				...state,
+				loading: action.payload, 
+			};
+
 		default:
 			return state;
 	}

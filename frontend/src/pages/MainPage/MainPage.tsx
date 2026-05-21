@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Navigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { store } from '../../store';
 import {
 	addTaskAsync,
@@ -8,17 +8,22 @@ import {
 	fetchTasksForProject,
 	updateTaskAsync,
 	saveTimeEntryAsync,
+	ACTION_TYPE,
 } from '../../action';
-import { selectProjects, selectUser, selectTasks } from '../../selectors';
+import {
+	selectProjects,
+	selectUser,
+	selectTasks,
+	selectIsLoading,
+} from '../../selectors';
 import {
 	DropDown,
 	TaskSearchInput,
 	Timer,
 	HeaderAllPage,
-	Button,
+	Loader,
 } from '../../components';
 import {
-	Main,
 	TaskTextarea,
 	TrackerComment,
 	TrackerButtons,
@@ -32,6 +37,7 @@ export const MainPage = () => {
 	const projects = useSelector(selectProjects);
 	const user = useSelector(selectUser);
 
+	const isLoading = useSelector(selectIsLoading);
 	const [selectedProject, setSelectedProject] = useState('');
 	const [searchQuery, setSearchQuery] = useState('');
 	const tasks = useSelector(selectTasks);
@@ -39,7 +45,6 @@ export const MainPage = () => {
 	const [descriptionTask, setDescriptionTask] = useState('');
 	const [timerComment, setTimerComment] = useState('');
 
-	// --- таймер ---
 	const [elapsedTime, setElapsedTime] = useState(0);
 	const [isRunning, setIsRunning] = useState(false);
 	const [startTime, setStartTime] = useState(null);
@@ -47,15 +52,14 @@ export const MainPage = () => {
 
 	const [saveMessage, setSaveMessage] = useState('');
 
-	if (!user || !user.id) return <Navigate to="/login" replace />;
-
-	// загрузка проектов
 	useEffect(() => {
-		dispatch(fetchProjects());
+		dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
+		dispatch(fetchProjects(1, 100));
 	}, [dispatch]);
 
 	useEffect(() => {
-		if (selectedProject) dispatch(fetchTasksForProject(selectedProject));
+		if (selectedProject) dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
+		dispatch(fetchTasksForProject(selectedProject));
 	}, [dispatch, selectedProject]);
 
 	useEffect(() => {
@@ -68,7 +72,6 @@ export const MainPage = () => {
 		label: project.title,
 	}));
 
-	// --- функции таймера ---
 	const startTimer = () => {
 		setIsRunning(true);
 		setStartTime(new Date());
@@ -93,36 +96,46 @@ export const MainPage = () => {
 		}
 	}, [saveMessage]);
 
-	// --- создание/обновление задачи ---
 	const getOrCreateTask = async () => {
 		let taskToUse = selectedTask;
 
-		if (!taskToUse && searchQuery) {
-			taskToUse = await dispatch(
-				addTaskAsync({
-					title: searchQuery,
-					description: descriptionTask,
-					projectId: selectedProject,
-				}),
-			);
-			setSelectedTask(taskToUse);
-		}
+		try {
+			if (!taskToUse && searchQuery) {
+				dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
+				taskToUse = await dispatch(
+					addTaskAsync({
+						title: searchQuery,
+						description: descriptionTask,
+						projectId: selectedProject,
+					}),
+				);
+				setSelectedTask(taskToUse);
+			}
 
-		if (!taskToUse) {
-			alert('Введите или выберите задачу');
+			if (!taskToUse) {
+				alert('Введите или выберите задачу');
+				return null;
+			}
+
+			if (taskToUse.id && taskToUse.description !== descriptionTask) {
+				dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
+				await dispatch(
+					updateTaskAsync(taskToUse.id, { description: descriptionTask }),
+				);
+			}
+
+			return taskToUse;
+		} catch (error) {
+			console.error('Не удалось обработать задачу:', error);
+			alert(
+				'Произошла ошибка при сохранении задачи. Пожалуйста, попробуйте еще раз.',
+			);
 			return null;
+		} finally {
+			dispatch({ type: ACTION_TYPE.SET_LOADING, payload: false });
 		}
-
-		if (taskToUse.description !== descriptionTask) {
-			await dispatch(
-				updateTaskAsync(taskToUse.id, { description: descriptionTask }),
-			);
-		}
-
-		return taskToUse;
 	};
 
-	// --- сохранение таймера ---
 	const saveTimerEntry = async () => {
 		const currentTask = await getOrCreateTask();
 		if (!currentTask) return;
@@ -132,6 +145,7 @@ export const MainPage = () => {
 		const endTime = new Date();
 		const durationMs = endTime - startTime;
 
+		dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
 		await dispatch(
 			saveTimeEntryAsync({
 				startTime: startTime.toISOString(),
@@ -148,7 +162,6 @@ export const MainPage = () => {
 			`Данные по задаче и времени сохранены в Проект ${projectObj.title}`,
 		);
 
-		// очистка
 		setElapsedTime(0);
 		setIsRunning(false);
 		setStartTime(null);
@@ -174,6 +187,7 @@ export const MainPage = () => {
 		let currentTask = tasks.byId[taskId];
 
 		if (!currentTask) {
+			dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
 			await dispatch(fetchTasksForProject(projectId));
 			const updatedState = store.getState();
 			currentTask = updatedState.tasks.byId[taskId];
@@ -188,13 +202,13 @@ export const MainPage = () => {
 	};
 
 	return (
-		<Main>
+		<main className=" flex-1 p-6 min-h-screen bg-gray-50 ">
+			{isLoading && <Loader />}
+
 			<HeaderAllPage children={`Привет ${user.name}!`} />
 
 			<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
-				{/* Контейнер верхней линии */}
 				<div className="flex items-end justify-between mb-6 gap-6">
-					{/* Группировка Дропдауна и Кнопки Добавления */}
 					<div className="flex items-end gap-3 flex-grow max-w-2xl">
 						<div className="w-64 flex-shrink-0">
 							<label className="block text-sm font-medium text-gray-700 mb-2">
@@ -221,8 +235,6 @@ export const MainPage = () => {
 							</div>
 						</Link>
 					</div>
-
-					{/* Таймер */}
 					<Timer
 						elapsedTime={elapsedTime}
 						isRunning={isRunning}
@@ -282,6 +294,6 @@ export const MainPage = () => {
 				<TodayTimeEntries onClick={onPlayEntry} isPlayTracker={isRunning} />
 				<Statistics />
 			</div>
-		</Main>
+		</main>
 	);
 };

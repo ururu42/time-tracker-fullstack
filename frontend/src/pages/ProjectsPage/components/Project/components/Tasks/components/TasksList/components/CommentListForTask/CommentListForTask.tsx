@@ -1,18 +1,27 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectTimeEntries } from '../../../../../../../../../../selectors';
+import {
+	selectTimeEntries,
+	selectIsLoading,
+} from '../../../../../../../../../../selectors';
 import {
 	formatTimeFromDate,
 	formatTimeFromMs,
 } from '../../../../../../../../../../utils';
 import { EditingCommentTask } from './EditingCommetTask/EditingCommentTask';
-import { removeTimeEntriesAsync } from '../../../../../../../../../../action';
+import {
+	removeTimeEntriesAsync,
+	ACTION_TYPE,
+} from '../../../../../../../../../../action';
+import { Loader } from '../../../../../../../../../../components';
 import { Icon } from '@iconify/react';
 
 export const CommentListForTask = ({ tasksByProject, task }) => {
 	const timeEntries = useSelector(selectTimeEntries);
 	const [editingCommentId, setEditingCommentId] = useState(null);
 	const [editCommentDiscription, setEditCommentDiscription] = useState(null);
+
+	const isLoading = useSelector(selectIsLoading);
 
 	const dispatch = useDispatch();
 
@@ -24,8 +33,6 @@ export const CommentListForTask = ({ tasksByProject, task }) => {
 		(entry) => entry.taskId === task.id,
 	);
 
-	console.log('taskEntries', taskEntries);
-
 	const startEditing = (entry) => {
 		setEditingCommentId(entry.id);
 		setEditCommentDiscription(entry.comment || '');
@@ -33,12 +40,14 @@ export const CommentListForTask = ({ tasksByProject, task }) => {
 
 	const onCommentRemove = (entryId) => {
 		if (window.confirm('Действительно удалить коментарий времени?')) {
+			dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
 			dispatch(removeTimeEntriesAsync(entryId));
 		}
 	};
 
 	return (
 		<div className="space-y-2">
+			{isLoading && <Loader />}
 			{taskEntries.length > 0 ? (
 				<div className="w-full bg-white rounded-xl border border-gray-100 overflow-hidden">
 					<div className="grid grid-cols-[7fr_1fr_1fr_1fr_1fr] px-6 py-3 border-b border-gray-100">
@@ -58,7 +67,7 @@ export const CommentListForTask = ({ tasksByProject, task }) => {
 
 					<div className="divide-y divide-gray-50">
 						{taskEntries.map((entry) => (
-							<>
+							<div key={entry.id}>
 								{editingCommentId === entry.id ? (
 									<EditingCommentTask
 										setEditingCommentId={setEditingCommentId}
@@ -106,7 +115,7 @@ export const CommentListForTask = ({ tasksByProject, task }) => {
 										</div>
 									</>
 								)}
-							</>
+							</div>
 						))}
 					</div>
 				</div>

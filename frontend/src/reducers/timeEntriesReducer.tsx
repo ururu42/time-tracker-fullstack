@@ -1,8 +1,8 @@
 import { ACTION_TYPE } from '../action';
 
 const initialTimeEntriesState = {
-	entries: [], // Array of time entries
-	currentTimeEntry: null, // Currently running time entry
+	entries: [], 
+	currentTimeEntry: null, 
 	loading: false,
 	error: null,
 };

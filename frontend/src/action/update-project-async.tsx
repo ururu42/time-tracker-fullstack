@@ -18,10 +18,12 @@ export const updateProjectAsync = (projectId, title, description) => {
 			}
 
 			const updatedProject = await response.json();
-			console.log('Задача обновлена, ответ от сервера:', updatedProject);
+			// console.log('Задача обновлена, ответ от сервера:', updatedProject);
 			dispatch({ type: ACTION_TYPE.UPDATE_PROJECT, payload: updatedProject.data });
 		} catch (e) {
 			console.error('Server error', e);
+		} finally {
+			dispatch({ type: ACTION_TYPE.SET_LOADING, payload: false });
 		}
 	};
 };

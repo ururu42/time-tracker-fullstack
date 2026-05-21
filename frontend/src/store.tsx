@@ -18,10 +18,8 @@ const reducer = combineReducers({
 	app: appReducer,
 });
 
-// Типы для TypeScript
 export type RootState = ReturnType<typeof reducer>;
 
-// Создаем хуки для использования в компонентах
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';

@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Main, HeaderAllPage } from '../../components';
+import { HeaderAllPage, Loader } from '../../components';
 import {
 	HeaderAnalytics,
 	ProjectDistribution,
 	DymanicBarChart,
 	TimeEntriesList,
 } from './components';
-import { selectProjects, selectTimeEntries } from '../../selectors';
-import { fetchTimeEntriesAsync } from '../../action';
+import { selectProjects, selectTimeEntries, selectIsLoading } from '../../selectors';
+import { fetchTimeEntriesAsync, ACTION_TYPE } from '../../action';
 import { getDateRange, getChartData } from '../../utils';
 
 export const AnalyticsPage = () => {
@@ -19,17 +19,23 @@ export const AnalyticsPage = () => {
 	const [chartData, setChartData] = useState([]);
 	const [filteredEntriesList, setFilteredEntriesList] = useState([]);
 
+	const isLoading = useSelector(selectIsLoading);
+
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(fetchTimeEntriesAsync);
+		dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
+		dispatch(fetchTimeEntriesAsync());
 	}, [dispatch]);
 
 	const projects = useSelector(selectProjects);
-	const projectOption = projects.map((project) => ({
-		value: project.id.toString(),
-		label: project.title,
-	}));
+
+	const projectOption = projects
+		.filter((project) => project && project.id)
+		.map((project) => ({
+			value: project.id.toString(),
+			label: project.title || 'Без названия',
+		}));
 
 	const handlePeriodChange = (newPeriod) => {
 		setSelectedPeriod(newPeriod);
@@ -59,9 +65,11 @@ export const AnalyticsPage = () => {
 		);
 
 		const filteredEntries = selectedProject
-			? filteredByDate.filter(
-					(entry) => entry.projectId.toString() === selectedProject,
-				)
+			? filteredByDate.filter((entry) => {
+					return entry?.projectId
+						? String(entry.projectId) === String(selectedProject)
+						: false;
+				})
 			: filteredByDate;
 
 		setChartData(chartData);
@@ -69,7 +77,8 @@ export const AnalyticsPage = () => {
 	}, [timeEntries, selectedPeriod, selectedProject, customDateRange]);
 
 	return (
-		<Main>
+		<main className=" flex-1 p-6 min-h-screen bg-gray-50 ">
+			{isLoading && <Loader />}
 			<HeaderAllPage children={'Отчеты'} />
 			<HeaderAnalytics
 				period={selectedPeriod}
@@ -97,6 +106,6 @@ export const AnalyticsPage = () => {
 				selectedProject={selectedProject}
 				projects={projects}
 			/>
-		</Main>
+		</main>
 	);
 };

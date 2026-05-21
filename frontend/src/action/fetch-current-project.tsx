@@ -20,6 +20,8 @@ export const fetchcurrentProject = (projectId) => {
 			});
 		} catch (e) {
 			console.error('Error fetching project:', e);
+		} finally {
+			dispatch({ type: ACTION_TYPE.SET_LOADING, payload: false });
 		}
 	};
 };

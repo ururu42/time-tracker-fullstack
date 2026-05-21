@@ -27,7 +27,6 @@ export const TaskSearchInput = ({
 		return () => clearTimeout(timer);
 	}, [searchQuery]);
 
-	// Поиск задач (с AbortController)
 	useEffect(() => {
 		if (!debouncedQuery) {
 			setFilteredTasks(tasks || []);
@@ -99,7 +98,7 @@ export const TaskSearchInput = ({
 							: 'Поиск или название задачи...'
 					}
 					disabled={disabled}
-					className={`w-full border rounded-lg bg-white border-gray-200  pl-4 pr-10 py-2.5 focus:ring-2 focus:ring-indigo-500 outline-none transition-all ${
+					className={`w-full border rounded-lg bg-white border-gray-200  pl-4 pr-10 py-2.5 focus:ring-2 focus:ring-green-500 outline-none transition-all ${
 						disabled
 							? '!bg-gray-100 !border-gray-200 !text-gray-400 cursor-not-allowed'
 							: 'text-gray-700'
@@ -111,10 +110,6 @@ export const TaskSearchInput = ({
 						disabled ? 'text-gray-300' : 'text-gray-400'
 					}`}
 				/>
-
-				{/* {isLoading && <div className="text-sm mt-1">Поиск...</div>}
-			{error && <div className="text-red-500 text-sm mt-1">{error}</div>} */}
-
 				{showSuggestions && (
 					<div className="absolute bg-white border w-full shadow-lg rounded-lg mt-1 z-50 max-h-60 overflow-auto">
 						{filteredTasks.map((task) => (
@@ -134,7 +129,7 @@ export const TaskSearchInput = ({
 
 						{filteredTasks.length === 0 && searchQuery && (
 							<div
-								className="p-2 hover:bg-gray-100 cursor-pointer text-indigo-600"
+								className="p-2 hover:bg-gray-100 cursor-pointer text-green-600"
 								onClick={() => handleAddTask(searchQuery)}
 							>
 								Создать задачу "{searchQuery}"

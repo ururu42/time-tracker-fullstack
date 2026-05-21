@@ -15,10 +15,12 @@ export const updateTaskAsync = (taskId, updatedFields) => {
 			}
 
 			const updatedTask = await response.json();
-			console.log('Задача обновлена, ответ от сервера:', updatedTask);
+			// console.log('Задача обновлена, ответ от сервера:', updatedTask);
 			dispatch({ type: ACTION_TYPE.UPDATE_TASK, payload: updatedTask.data });
 		} catch (e) {
 			console.error('Server error', e);
+		} finally {
+			dispatch({ type: ACTION_TYPE.SET_LOADING, payload: false });
 		}
 	};
 };

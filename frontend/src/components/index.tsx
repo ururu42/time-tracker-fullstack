@@ -13,3 +13,5 @@ export * from './Go-Back-Button.tsx/GoBackButton';
 export * from './TaskSearchInput/TaskSearchInput';
 export * from './Timer/Timer';
 export * from './HeaderAllPage/HeaderAllPage';
+export * from './PrivateRoute/PrivateRoute';
+export * from './Loader/Loader'

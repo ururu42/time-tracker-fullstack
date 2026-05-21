@@ -21,10 +21,12 @@ export const saveTimeEntryAsync = ({ taskId, startTime, endTime, duration, comme
 			}
 
 			const savedTime = await response.json();
-			console.log('Время добавлено, ответ от сервера:', savedTime);
+			// console.log('Время добавлено, ответ от сервера:', savedTime);
 			dispatch({ type: ACTION_TYPE.ADD_TIME_ENTRY, payload: savedTime.data });
 		} catch (e) {
 			console.error('Server error', e);
+		} finally {
+			dispatch({ type: ACTION_TYPE.SET_LOADING, payload: false });
 		}
 	};
 };

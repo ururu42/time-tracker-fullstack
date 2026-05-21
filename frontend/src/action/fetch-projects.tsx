@@ -21,6 +21,6 @@ export const fetchProjects = (page = 1, limit = 5, search = '') => {
 			return result.lastPage;
 		} catch (e) {
 			console.error('Error fetching projects:', e);
-		}
+		} 
 	};
 };

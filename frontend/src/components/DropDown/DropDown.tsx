@@ -18,7 +18,6 @@ export const DropDown = ({
 	const selectedOption = options.find((opt) => opt.value === selectedProject);
 	const hasValue = selectedProject !== '';
 
-	// Закрытие при клике вне dropdown
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -42,17 +41,16 @@ export const DropDown = ({
 
 	return (
 		<div ref={dropdownRef} className={`relative w-full ${className}`}>
-			{/* Кнопка dropdown */}
 			<button
 				type="button"
 				onClick={() => !disabled && setIsOpen(!isOpen)}
 				disabled={disabled}
 				className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg border shadow-sm transition-all cursor-pointer ${
 					hasValue
-						? 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700'
+						? 'bg-green-600 border-green-600 text-white hover:bg-green-700'
 						: 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'
 				} ${disabled ? 'opacity-60 cursor-not-allowed' : ''} ${
-					isOpen ? 'ring-2 ring-indigo-500' : ''
+					isOpen ? 'ring-2 ring-green-500' : ''
 				}`}
 			>
 				<span className="truncate">
@@ -66,10 +64,8 @@ export const DropDown = ({
 				/>
 			</button>
 
-			{/* Выпадающий список */}
 			{isOpen && (
 				<div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
-					{/* Опция placeholder (если нужно сбросить выбор) */}
 					<button
 						type="button"
 						onClick={() => handleSelect('')}
@@ -77,15 +73,14 @@ export const DropDown = ({
 					>
 						{placeholder}
 					</button>
-					{/* Список опций */}
 					{options.map((option, index) => (
 						<button
 							key={option.value}
 							type="button"
 							onClick={() => handleSelect(option.value)}
-							className={`w-full px-4 py-2.5 text-left text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors ${
+							className={`w-full px-4 py-2.5 text-left text-gray-700 hover:bg-indigo-50 hover:text-green-600 transition-colors ${
 								option.value === selectedProject
-									? 'bg-indigo-50 text-indigo-600 font-medium'
+									? 'bg-indigo-50 text-green-600 font-medium'
 									: ''
 							} ${index === options.length - 1 ? 'rounded-b-lg' : ''}`}
 						>

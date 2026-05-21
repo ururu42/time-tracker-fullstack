@@ -8,7 +8,7 @@ import {
 	MainPage,
 	EditProject,
 } from './pages';
-import { Header, PageLayout, Main } from './components';
+import { Header, PageLayout, Main, PrivateRoute } from './components';
 import { AddProjectForm } from './pages/ProjectsPage/components/AddProjectForm/AddProjectForm';
 import { EditCurrentTask } from './pages/ProjectsPage/components/Project/components/Tasks/components/TasksList/components/EditCurrentTask/EditCurrentTask';
 import { Project } from './pages/ProjectsPage/components';
@@ -19,16 +19,17 @@ function App() {
 			<Header />
 			<Main>
 				<Routes>
-					<Route path="/" element={<MainPage />} />
-					<Route path="/projects" element={<ProjectsPage />} />
-					<Route path="/projects/:id" element={<Project />} />
-					<Route path="/projects/:id/edit" element={<EditProject />} />
-					<Route path="/projects/:id/editTask" element={<EditCurrentTask />} />
-					<Route path="/projects/create" element={<AddProjectForm />} />
-					<Route path="/analytics" element={<AnalyticsPage />} />
-					<Route path="/register" element={<Registration />} />
 					<Route path="/login" element={<LoginPage />} />
-					<Route path="/settings" element={<SettingsPage />} />
+					<Route path="/register" element={<Registration />} />
+
+					<Route path="/" element={<PrivateRoute><MainPage /></PrivateRoute>} />
+					<Route path="/projects" element={<PrivateRoute><ProjectsPage /></PrivateRoute>} />
+					<Route path="/projects/:id" element={<PrivateRoute><Project /></PrivateRoute>} />
+					<Route path="/projects/:id/edit" element={<PrivateRoute><EditProject /></PrivateRoute>} />
+					<Route path="/projects/:id/editTask" element={<PrivateRoute><EditCurrentTask /></PrivateRoute>} />
+					<Route path="/projects/create" element={<PrivateRoute><AddProjectForm /></PrivateRoute>} />
+					<Route path="/analytics" element={<PrivateRoute><AnalyticsPage /></PrivateRoute>} />
+					<Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
 				</Routes>
 			</Main>
 		</PageLayout>

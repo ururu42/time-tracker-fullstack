@@ -7,7 +7,7 @@ const initialUserState = {
 	avatar: null,
 	role: null,
 	settings: {
-		timezone: 'Europe/Chisinau', // Default timezone
+		timezone: 'Europe/Chisinau', 
 	},
 	createdAt: null,
 	updatedAt: null,

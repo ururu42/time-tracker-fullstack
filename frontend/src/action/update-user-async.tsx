@@ -19,7 +19,7 @@ export const updateUserAsync = (userId, editForm) => {
 			}
 
 			const updateUser = await response.json();
-			console.log('Задача обновлена, ответ от сервера:', updateUser);
+			// console.log('Задача обновлена, ответ от сервера:', updateUser);
 			dispatch({ type: ACTION_TYPE.UPDATE_USER, payload: updateUser.data });
 		} catch (e) {
 			console.error('Server error', e);

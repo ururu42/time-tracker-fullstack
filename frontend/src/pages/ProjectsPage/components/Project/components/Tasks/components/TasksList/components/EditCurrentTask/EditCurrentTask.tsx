@@ -17,7 +17,6 @@ export const EditCurrentTask = ({
 }) => {
 	const dispatch = useDispatch();
 
-	// Отмена редактирования
 	const cancelEditing = () => {
 		setEditingTaskId(null);
 		setEditTitle('');
@@ -26,7 +25,6 @@ export const EditCurrentTask = ({
 		setEditPriority('');
 	};
 
-	// Сохранение изменений
 	const saveEditing = () => {
 		if (editTitle.trim()) {
 			dispatch(

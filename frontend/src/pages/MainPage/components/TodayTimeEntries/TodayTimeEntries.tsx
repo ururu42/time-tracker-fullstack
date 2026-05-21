@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectTodayTimeEntries } from '../../../../selectors';
 import { fetchTimeEntriesAsync } from '../../../../action';
@@ -23,7 +23,6 @@ export const TodayTimeEntries = ({ onClick, isPlayTracker }) => {
 					onClick={onClick}
 					isPlayTracker={isPlayTracker}
 				/>
-				{/* Здесь будет список записей */}
 			</div>
 		</div>
 	);

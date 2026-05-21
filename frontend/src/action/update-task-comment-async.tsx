@@ -17,7 +17,7 @@ export const updateTaskCommentAsync = (commentId, comment) => {
 			}
 
 			const updatedComment = await response.json();
-			console.log('Комментарий обновлен, ответ от сервера:', updatedComment);
+			// console.log('Комментарий обновлен, ответ от сервера:', updatedComment);
 			dispatch({
 				type: ACTION_TYPE.UPDATE_TIME_ENTRY,
 				payload: updatedComment.data,

@@ -10,18 +10,34 @@ export const AddTaskForm = ({ project, setIsAddTask }) => {
 
 	const [newTitle, setNewTitle] = useState('');
 	const [newDescription, setNewDescription] = useState('');
+	const [isSaving, setIsSaving] = useState(false);
 
-	const handleSubmit = () => {
-		dispatch(
-			addTaskAsync({
-				title: newTitle,
-				description: newDescription,
-				projectId: project.id,
-			}),
-		);
-		dispatch(fetchcurrentProject(project.id));
-		setIsAddTask(false);
-		navigate(`/projects/${project.id}`);
+	const handleSubmit = async () => {
+		if (!newTitle.trim()) {
+			alert('Введите название задачи');
+			return;
+		}
+
+		try {
+			setIsSaving(true);
+			await dispatch(
+				addTaskAsync({
+					title: newTitle,
+					description: newDescription,
+					projectId: project.id,
+				}),
+			);
+
+			await dispatch(fetchcurrentProject(project.id));
+
+			setIsAddTask(false);
+			navigate(`/projects/${project.id}`);
+		} catch (error) {
+			console.error('Ошибка при создании задачи:', error);
+			alert('Не удалось сохранить задачу. Попробуйте еще раз.');
+		} finally {
+			setIsSaving(false);
+		}
 	};
 
 	return (
@@ -37,6 +53,8 @@ export const AddTaskForm = ({ project, setIsAddTask }) => {
 				descriptionLabel="Описание задачи"
 				titlePlaceholder="Введите название задачи"
 				descriptionPlaceholder="Введите описание задачи"
+				isLoading={isSaving}
+				disabled={isSaving}
 			/>
 		</div>
 	);

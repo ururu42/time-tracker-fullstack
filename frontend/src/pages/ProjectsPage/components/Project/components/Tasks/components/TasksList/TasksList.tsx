@@ -15,7 +15,6 @@ export const TasksList = ({ project }) => {
 	const tasksByProject = useSelector((state) =>
 		selectTasksByProject(state, project.id),
 	);
-	console.log(tasksByProject, 'tasksByProject');
 
 	return (
 		<div>

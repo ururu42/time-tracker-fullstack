@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectTodayTimeEntries } from '../../../../selectors';
 import { fetchTimeEntriesAsync } from '../../../../action';
-import { calculateProjectStats } from '../../../../utils';
+import { calculateProjectStats, formatTimeFromMs } from '../../../../utils';
 import { Icon } from '@iconify/react';
 
 export const Statistics = () => {
@@ -24,13 +24,6 @@ export const Statistics = () => {
 		}
 	}, [todayTimeEntries]);
 
-	// Форматировать время (часы:минуты)
-	const formatTotalTime = (ms: number) => {
-		const hours = Math.floor(ms / 3600000);
-		const minutes = Math.floor((ms % 3600000) / 60000);
-		return `${hours}ч ${minutes}м`;
-	};
-
 	return (
 		<div className="col-span-1">
 			<h2 className="text-lg font-semibold text-gray-900 mb-4 ml-4">Статистика</h2>
@@ -45,7 +38,7 @@ export const Statistics = () => {
 				<p className="text-sm text-gray-500 mb-1">Всего за день</p>
 
 				<p className="text-4xl font-bold text-gray-900 tracking-tight">
-					{formatTotalTime(totalDuration)}
+					{formatTimeFromMs(totalDuration, true)}
 				</p>
 			</div>
 			<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
@@ -68,7 +61,7 @@ export const Statistics = () => {
 											<span
 												className="w-2.5 h-2.5 rounded-full"
 												style={{
-													backgroundColor: '#3B82F6',
+													backgroundColor: '#10B981',
 												}}
 											></span>
 											<span className="text-sm font-medium text-gray-700">
@@ -86,14 +79,14 @@ export const Statistics = () => {
 											className="h-full rounded-full transition-all duration-300"
 											style={{
 												width: `${item.percent}%`,
-												backgroundColor: '#3B82F6',
+												backgroundColor: '#10B981',
 											}}
 										></div>
 									</div>
 
 									{/* Время по проекту */}
 									<p className="text-xs text-gray-500 mt-1">
-										{formatTotalTime(item.totalDuration)}
+										{formatTimeFromMs(item.totalDuration, true)}
 									</p>
 								</div>
 							))}

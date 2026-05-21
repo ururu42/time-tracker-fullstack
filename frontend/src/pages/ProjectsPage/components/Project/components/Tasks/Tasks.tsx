@@ -1,5 +1,6 @@
-import { TasksList, AddTaskForm } from './components';
 import { useState } from 'react';
+import { useSelector } from 'react-redux'
+import { TasksList, AddTaskForm } from './components';
 import { Icon } from '@iconify/react';
 
 export const Tasks = ({ project }) => {

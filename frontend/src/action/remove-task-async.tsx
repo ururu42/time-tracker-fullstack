@@ -8,7 +8,7 @@ export const removeTaskAsync = (taskId) => {
 				credentials: 'include',
 			});
 			const result = await response.json();
-			console.log(result);
+
 			dispatch({ type: ACTION_TYPE.DELETE_TASK, payload: taskId });
 		} catch (e) {
 			console.error('Server error', e);
