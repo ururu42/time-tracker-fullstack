@@ -2,13 +2,19 @@ const TimeEntry = require("../models/TimeEntry");
 const mapTimeEntry = require("../helpers/mapTimeEntry");
 
 async function getTimeEntries(userId) {
-  const allTimeEntries = await TimeEntry.find({ owner: userId }).sort({
-    startTime: -1,
-  });
+  const allTimeEntries = await TimeEntry.find({ owner: userId })
+    .populate({
+      path: "taskId",
+      select: "title projectId",
+      populate: {
+        path: "projectId",
+        select: "title",
+      },
+    })
+    .sort({ startTime: -1 });
 
   return allTimeEntries.map(mapTimeEntry);
 }
-
 async function getTimeEntryById(userId, entryId) {
   const timeEntry = await TimeEntry.findOne({ _id: entryId, owner: userId });
 
@@ -17,12 +23,13 @@ async function getTimeEntryById(userId, entryId) {
 
 async function createTimeEntry(userId, body) {
   const allowedFields = [
-    "projectId",
+    "taskId",
     "startTime",
     "endTime",
     "duration",
     "comment",
   ];
+
   const newData = {
     owner: userId,
     comment: "",
@@ -34,23 +41,35 @@ async function createTimeEntry(userId, body) {
     }
   }
 
-  // Автоматически вычисляем duration (в минутах)
-  if (newData.startTime && newData.endTime) {
-    newData.duration = Math.round(
-      (new Date(newData.endTime) - new Date(newData.startTime)) / 60000
-    );
-  } else {
-    newData.duration = 0; // или можно не указывать, если в схеме default: 0
+  if (newData.duration === undefined) {
+    if (newData.startTime && newData.endTime) {
+      newData.duration = Math.round(
+        (new Date(newData.endTime) - new Date(newData.startTime)) / 60000,
+      );
+    } else {
+      newData.duration = 0;
+    }
   }
 
   const createdNewTimeEntry = await TimeEntry.create(newData);
 
-  return mapTimeEntry(createdNewTimeEntry);
+  const populatedEntry = await TimeEntry.findById(
+    createdNewTimeEntry._id,
+  ).populate({
+    path: "taskId",
+    select: "title projectId",
+    populate: {
+      path: "projectId",
+      select: "title",
+    },
+  });
+
+  return mapTimeEntry(populatedEntry);
 }
 
 async function updateTimeEntry(userId, entryId, body) {
   const allowedFields = [
-    "projectId",
+    "taskId",
     "startTime",
     "endTime",
     "duration",
@@ -67,7 +86,7 @@ async function updateTimeEntry(userId, entryId, body) {
   const updatedTimeEntry = await TimeEntry.findOneAndUpdate(
     { _id: entryId, owner: userId },
     updateData,
-    { runValidators: true, new: true }
+    { runValidators: true, new: true },
   );
 
   return updatedTimeEntry ? mapTimeEntry(updatedTimeEntry) : null;

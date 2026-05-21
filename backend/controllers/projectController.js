@@ -1,5 +1,6 @@
 const Project = require("../models/Projects");
 const Task = require("../models/Task");
+const TimeEntry = require("../models/TimeEntry");
 const mapProject = require("../helpers/mapProject");
 
 async function getProjects(userId, search = "", limit = 10, page = 1) {
@@ -50,12 +51,14 @@ async function updateProject(userId, projectId, body) {
 }
 
 async function deleteProject(userId, projectId) {
+  const tasks = await Task.find({ projectId, owner: userId });
+
+  const taskIds = tasks.map((task) => task._id);
+  await TimeEntry.deleteMany({ taskId: { $in: taskIds } });
+
   await Task.deleteMany({ projectId, owner: userId });
 
-  const result = await Project.deleteOne({
-    _id: projectId,
-    owner: userId,
-  });
+  const result = await Project.deleteOne({ _id: projectId, owner: userId });
 
   return result.deletedCount > 0;
 }

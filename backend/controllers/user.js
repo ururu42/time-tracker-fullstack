@@ -23,37 +23,27 @@ async function register(login, password) {
 }
 
 async function login(login, password) {
-  console.log("Начало процесса логина для пользователя:", login);
-
   const user = await User.findOne({ login });
-  console.log("Найден пользователь:", user ? user.login : "не найден");
 
   if (!user) {
-    console.log("Пользователь не найден");
     throw new Error("User not found");
   }
 
-  console.log("Проверка пароля...");
   const isPasswordValid = await bcrypt.compare(password, user.password);
-  console.log("Результат проверки пароля:", isPasswordValid);
 
   if (!isPasswordValid) {
-    console.log("Неверный пароль");
     throw new Error("Invalid password");
   }
 
-  console.log("Генерация токена...");
   const token = generate({ id: user._id });
-  console.log("Токен сгенерирован");
 
-  console.log("Возврат данных пользователя");
   return { user: mapUser(user), token };
 }
 
-async function getUsers() {
-  const users = await User.find().select("-password");
-  return users.map(mapUser);
-}
+// async function getUsers() {
+//   const users = await User.find().select("-password");
+//   return users.map(mapUser);
+// }
 
 async function getUserById(id) {
   const user = await User.findById(id).select("-password");
@@ -62,15 +52,11 @@ async function getUserById(id) {
 
 async function updateUserById(id, data = {}) {
   try {
-    console.log("Обновление пользователя с ID:", id);
-    console.log("Данные для обновления:", data);
-
     const allowedFields = ["name", "avatar", "login"];
     const updateData = {};
 
     for (const field of allowedFields) {
       if (data[field] !== undefined) {
-        // Проверяем, если обновляется логин, то он должен быть уникальным
         if (field === "login") {
           const existingUser = await User.findOne({
             login: data[field],
@@ -90,14 +76,11 @@ async function updateUserById(id, data = {}) {
       }
     }
 
-    console.log("Данные для обновления в базе:", updateData);
-
     const updatedUser = await User.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
     });
 
-    console.log("Результат обновления:", updatedUser);
     return updatedUser ? mapUser(updatedUser) : null;
   } catch (error) {
     console.error("Ошибка при обновлении пользователя:", error);
@@ -111,19 +94,19 @@ async function deleteUser(id) {
   return deletedUser.deletedCount > 0;
 }
 
-async function getRoles() {
-  return [
-    { id: ROLES.ADMIN, name: "Admin" },
-    { id: ROLES.USER, name: "User" },
-  ];
-}
+// async function getRoles() {
+//   return [
+//     { id: ROLES.ADMIN, name: "Admin" },
+//     { id: ROLES.USER, name: "User" },
+//   ];
+// }
 
 module.exports = {
   register,
   login,
-  getUsers,
+  // getUsers,
   getUserById,
   updateUserById,
   deleteUser,
-  getRoles,
+  // getRoles,
 };

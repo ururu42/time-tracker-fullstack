@@ -7,24 +7,18 @@ router.post("/register", async (req, res) => {
   try {
     const { user, token } = await register(req.body.login, req.body.password);
 
-    res
-      .cookie("token", token, { httpOnly: true })
-      .status(201)
-      .send({
-        error: null,
-        user,
-      });
+    res.cookie("token", token, { httpOnly: true }).status(201).send({
+      error: null,
+      user,
+    });
   } catch (e) {
     res.status(400).send({ error: e.message || "Unknown error" });
   }
 });
 
 router.post("/login", async (req, res) => {
-  console.log("Получен запрос на логин");
   try {
-    console.log("Вызов функции login");
     const { user, token } = await login(req.body.login, req.body.password);
-    console.log("Функция login завершена успешно");
 
     res
       .cookie("token", token, { httpOnly: true })

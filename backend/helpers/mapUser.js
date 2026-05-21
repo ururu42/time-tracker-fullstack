@@ -11,7 +11,6 @@ module.exports = function mapUser(user) {
     settings: user.settings,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
-    // Определяем строковое представление роли
     roleName: user.role === roles.ADMIN ? "admin" : "user",
   };
 };

@@ -3,6 +3,9 @@ const authenticated = require("../middlewares/authenticated");
 const { getUserById, updateUserById } = require("../controllers/user");
 
 const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
+
 const upload = multer({ dest: "uploads/" });
 
 const router = express.Router();
@@ -11,9 +14,9 @@ router.use(authenticated);
 router.get("/me", async (req, res) => {
   try {
     const user = await getUserById(req.user._id);
+
     if (!user) {
-      res.status(404).send({ error: "User not found" });
-      return;
+      return res.status(404).send({ error: "User not found" });
     }
 
     res.status(200).send({ data: user });
@@ -24,17 +27,36 @@ router.get("/me", async (req, res) => {
 
 router.put("/me", upload.single("avatar"), async (req, res) => {
   try {
-    // Обработка загруженного файла
-    const avatarPath = req.file ? req.file.path : undefined;
+    const currentUser = await getUserById(req.user.id);
 
-    const updatedUser = await updateUserById(req.user._id, {
+    let avatarPath = currentUser?.avatar;
+
+    if (req.file) {
+      avatarPath = req.file.path;
+    }
+
+    if (req.body.removeAvatar === "true") {
+      avatarPath = null;
+
+      if (currentUser?.avatar) {
+        const fullPath = path.join(__dirname, "..", currentUser.avatar);
+
+        fs.unlink(fullPath, (err) => {
+          if (err) {
+            console.log("Ошибка удаления файла:", err);
+          }
+        });
+      }
+    }
+
+    const updatedUser = await updateUserById(req.user.id, {
       name: req.body.name,
       login: req.body.login,
-      avatar: avatarPath, // Используем путь к загруженному файлу, а не req.body.avatar
+      avatar: avatarPath,
     });
+
     if (!updatedUser) {
-      res.status(404).send({ error: "User not updated" });
-      return;
+      return res.status(404).send({ error: "User not updated" });
     }
 
     res.status(200).send({
