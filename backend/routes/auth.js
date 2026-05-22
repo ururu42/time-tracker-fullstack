@@ -7,10 +7,17 @@ router.post("/register", async (req, res) => {
   try {
     const { user, token } = await register(req.body.login, req.body.password);
 
-    res.cookie("token", token, { httpOnly: true }).status(201).send({
-      error: null,
-      user,
-    });
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
+      .status(201)
+      .send({
+        error: null,
+        user,
+      });
   } catch (e) {
     res.status(400).send({ error: e.message || "Unknown error" });
   }
@@ -21,7 +28,11 @@ router.post("/login", async (req, res) => {
     const { user, token } = await login(req.body.login, req.body.password);
 
     res
-      .cookie("token", token, { httpOnly: true })
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
       .status(200)
       .send({ error: null, user });
     console.log("Ответ отправлен клиенту");
@@ -32,7 +43,14 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/logout", (req, res) => {
-  res.cookie("token", "", { httpOnly: true, maxAge: 0 }).send({});
+  res
+    .cookie("token", "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 0,
+    })
+    .send({});
 });
 
 module.exports = router;
