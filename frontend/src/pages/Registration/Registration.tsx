@@ -8,6 +8,7 @@ import { setUser, ACTION_TYPE } from '../../action';
 import { selectIsLoading } from '../../selectors';
 import { Button } from '../../components/Button/Button';
 import { Loader } from '../../components';
+import { API_URL } from '../../config';
 
 const regFormSchema = yup.object().shape({
 	login: yup
@@ -56,10 +57,11 @@ export const Registration = () => {
 		setServerError(null);
 
 		try {
-			const response = await fetch('/api/auth/register', {
+			const response = await fetch(`${API_URL}/api/auth/register`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
+					credentials: 'include',
 				},
 				body: JSON.stringify({ login, password }),
 			});

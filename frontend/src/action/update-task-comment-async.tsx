@@ -1,9 +1,10 @@
 import { ACTION_TYPE } from './action-type';
+import { API_URL } from '../config';
 
 export const updateTaskCommentAsync = (commentId, comment) => {
 	return async (dispatch) => {
 		try {
-			const response = await fetch(`/api/time/${commentId}`, {
+			const response = await fetch(`${API_URL}/api/time/${commentId}`, {
 				method: 'PATCH',
 				headers: { 'Content-Type': 'application/json;charset=utf-8' },
 				credentials: 'include',
@@ -17,7 +18,7 @@ export const updateTaskCommentAsync = (commentId, comment) => {
 			}
 
 			const updatedComment = await response.json();
-			// console.log('Комментарий обновлен, ответ от сервера:', updatedComment);
+
 			dispatch({
 				type: ACTION_TYPE.UPDATE_TIME_ENTRY,
 				payload: updatedComment.data,

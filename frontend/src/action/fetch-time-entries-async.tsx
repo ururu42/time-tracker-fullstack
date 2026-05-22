@@ -1,9 +1,10 @@
 import { ACTION_TYPE } from './action-type';
+import { API_URL } from '../config';
 
 export const fetchTimeEntriesAsync = () => {
 	return async (dispatch) => {
 		try {
-			const response = await fetch(`/api/time`, {
+			const response = await fetch(`${API_URL}/api/time`, {
 				method: 'GET',
 				credentials: 'include',
 			});

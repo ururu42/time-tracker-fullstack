@@ -1,9 +1,10 @@
 import { ACTION_TYPE } from './action-type';
+import { API_URL } from '../config';
 
 export const saveTimeEntryAsync = ({ taskId, startTime, endTime, duration, comment }) => {
 	return async (dispatch) => {
 		try {
-			const response = await fetch(`/api/time`, {
+			const response = await fetch(`${API_URL}/api/time`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json;charset=utf-8' },
 				credentials: 'include',
@@ -21,7 +22,7 @@ export const saveTimeEntryAsync = ({ taskId, startTime, endTime, duration, comme
 			}
 
 			const savedTime = await response.json();
-			// console.log('Время добавлено, ответ от сервера:', savedTime);
+
 			dispatch({ type: ACTION_TYPE.ADD_TIME_ENTRY, payload: savedTime.data });
 		} catch (e) {
 			console.error('Server error', e);

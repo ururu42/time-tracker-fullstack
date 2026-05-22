@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { setUser, ACTION_TYPE } from '../../action';
 import { Button, Loader } from '../../components';
 import { selectIsLoading } from '../../selectors';
+import { API_URL } from '../../config';
 
 const authFormSchema = yup.object().shape({
 	login: yup
@@ -56,10 +57,11 @@ export const LoginPage = () => {
 		setServerError(null);
 
 		try {
-			const response = await fetch('/api/auth/login', {
+			const response = await fetch(`${API_URL}/api/auth/login`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
+					credentials: 'include',
 				},
 				body: JSON.stringify({ login, password }),
 			});

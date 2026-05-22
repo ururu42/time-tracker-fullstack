@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { ACTION_TYPE } from '../../../../action';
 import { Input, Button } from '../../../../components';
 import { Icon } from '@iconify/react';
+import { API_URL } from '../../../../config';
 
 export const EditSettingsPage = ({
 	user,
@@ -60,7 +61,7 @@ export const EditSettingsPage = ({
 		}
 
 		try {
-			const response = await fetch('/api/user/me', {
+			const response = await fetch(`${API_URL}/api/user/me`, {
 				method: 'PUT',
 				credentials: 'include',
 				body: formData,

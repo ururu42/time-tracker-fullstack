@@ -1,9 +1,10 @@
 import { ACTION_TYPE } from './action-type';
+import { API_URL } from '../config';
 
 export const updateProjectAsync = (projectId, title, description) => {
 	return async (dispatch) => {
 		try {
-			const response = await fetch(`/api/project/${projectId}`, {
+			const response = await fetch(`${API_URL}/api/project/${projectId}`, {
 				method: 'PATCH',
 				headers: { 'Content-Type': 'application/json;charset=utf-8' },
 				credentials: 'include',
@@ -18,7 +19,7 @@ export const updateProjectAsync = (projectId, title, description) => {
 			}
 
 			const updatedProject = await response.json();
-			// console.log('Задача обновлена, ответ от сервера:', updatedProject);
+
 			dispatch({ type: ACTION_TYPE.UPDATE_PROJECT, payload: updatedProject.data });
 		} catch (e) {
 			console.error('Server error', e);

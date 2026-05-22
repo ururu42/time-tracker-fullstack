@@ -1,9 +1,10 @@
 import { ACTION_TYPE } from './action-type';
+import { API_URL } from '../config';
 
 export const updateTaskAsync = (taskId, updatedFields) => {
 	return async (dispatch) => {
 		try {
-			const response = await fetch(`/api/tasks/${taskId}`, {
+			const response = await fetch(`${API_URL}/api/tasks/${taskId}`, {
 				method: 'PUT',
 				headers: { 'Content-Type': 'application/json;charset=utf-8' },
 				credentials: 'include',
@@ -15,7 +16,7 @@ export const updateTaskAsync = (taskId, updatedFields) => {
 			}
 
 			const updatedTask = await response.json();
-			// console.log('Задача обновлена, ответ от сервера:', updatedTask);
+
 			dispatch({ type: ACTION_TYPE.UPDATE_TASK, payload: updatedTask.data });
 		} catch (e) {
 			console.error('Server error', e);

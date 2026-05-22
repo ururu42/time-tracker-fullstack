@@ -1,9 +1,10 @@
 import { ACTION_TYPE } from './action-type';
+import { API_URL } from '../config';
 
 export const addTaskAsync = (taskData) => {
 	return async (dispatch) => {
 		try {
-			const response = await fetch(`/api/tasks`, {
+			const response = await fetch(`${API_URL}/api/tasks`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json;charset=utf-8' },
 				credentials: 'include',

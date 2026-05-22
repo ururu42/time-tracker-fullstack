@@ -1,9 +1,10 @@
 import { ACTION_TYPE } from './action-type';
+import { API_URL } from '../config';
 
 export const fetchcurrentProject = (projectId) => {
 	return async (dispatch) => {
 		try {
-			const res = await fetch(`/api/project/${projectId}`, {
+			const res = await fetch(`${API_URL}/api/project/${projectId}`, {
 				method: 'GET',
 				credentials: 'include',
 			});

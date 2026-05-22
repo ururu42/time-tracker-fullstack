@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectTasksByProject } from '../../selectors';
 import { addTaskAsync } from '../../action';
 import { Icon } from '@iconify/react';
+import { API_URL } from '../../config';
 
 export const TaskSearchInput = ({
 	selectedProject,
@@ -42,7 +43,7 @@ export const TaskSearchInput = ({
 				setError(null);
 
 				const response = await fetch(
-					`/api/tasks?search=${debouncedQuery}&projectId=${selectedProject}`,
+					`${API_URL}/api/tasks?search=${debouncedQuery}&projectId=${selectedProject}`,
 					{ signal: abortController.signal },
 				);
 

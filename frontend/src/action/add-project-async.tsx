@@ -1,9 +1,10 @@
 import { ACTION_TYPE } from './action-type';
+import { API_URL } from '../config';
 
 export const addProjectAsync = (newTitle, newDescription) => {
 	return async (dispatch) => {
 		try {
-			const response = await fetch(`/api/project`, {
+			const response = await fetch(`${API_URL}/api/project`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json;charset=utf-8' },
 				credentials: 'include',

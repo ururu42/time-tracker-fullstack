@@ -1,10 +1,11 @@
 import { ACTION_TYPE } from './action-type';
+import { API_URL } from '../config';
 
 export const fetchProjects = (page = 1, limit = 5, search = '') => {
 	return async (dispatch) => {
 		try {
 			const response = await fetch(
-				`/api/project?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`,
+				`${API_URL}/api/project?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`,
 				{
 					method: 'GET',
 					credentials: 'include',
@@ -21,6 +22,6 @@ export const fetchProjects = (page = 1, limit = 5, search = '') => {
 			return result.lastPage;
 		} catch (e) {
 			console.error('Error fetching projects:', e);
-		} 
+		}
 	};
 };
