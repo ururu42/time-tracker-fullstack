@@ -20,7 +20,6 @@ export const Project = () => {
 	const navigate = useNavigate();
 
 	const [isEditing, setIsEditing] = useState(false);
-	// const [editForm, setEditForm] = useState({ title: '', description: '' });
 	const isLoading = useSelector(selectIsLoading);
 
 	useEffect(() => {
@@ -51,7 +50,7 @@ export const Project = () => {
 			}
 		}
 	};
-	
+
 	if (isLoading || !currentProject) {
 		return <Loader />;
 	}

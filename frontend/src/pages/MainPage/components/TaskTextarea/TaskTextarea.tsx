@@ -7,7 +7,7 @@ export const TaskTextarea = ({ description, setDescription }) => {
 			<textarea
 				value={description}
 				onChange={(e) => setDescription(e.target.value)}
-				placeholder={'Поиск или название задачи...'}
+				placeholder={'Описание задачи...'}
 				rows={4}
 				className={`w-full border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none transition-all`}
 			/>

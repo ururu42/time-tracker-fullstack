@@ -9,9 +9,15 @@ export const removeTimeEntriesAsync = (commentId) => {
 				credentials: 'include',
 			});
 
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
 			dispatch({ type: ACTION_TYPE.DELETE_TIME_ENTRY, payload: commentId });
+			dispatch({ type: ACTION_TYPE.SET_LOADING, payload: false });
 		} catch (e) {
 			console.error('Server error', e);
+			dispatch({ type: ACTION_TYPE.SET_LOADING, payload: false });
 		}
 	};
 };

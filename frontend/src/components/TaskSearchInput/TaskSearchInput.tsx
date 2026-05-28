@@ -71,14 +71,14 @@ export const TaskSearchInput = ({
 		return () => clearTimeout(blurTimeoutRef.current);
 	}, []);
 
-	const handleAddTask = (title) => {
-		const newTask = dispatch(
+	const handleAddTask = async (title) => {
+		const newTask = await dispatch(
 			addTaskAsync({ title, description, projectId: selectedProject }),
 		);
 		setSelectedTask(newTask);
-		setDescription('');
 		setSearchQuery(title);
 		setShowSuggestions(false);
+		// Не очищаем description здесь, чтобы MainPage мог проверить и обновить задачу при необходимости
 	};
 
 	const handleSelectTask = (task) => {
