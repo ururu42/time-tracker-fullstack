@@ -8,6 +8,7 @@ import { Search } from './components/Search/Search';
 import { PAGINATION_LIMIT } from '../../constants';
 import { debounce } from './utils';
 import { HeaderAllPage, Loader } from '../../components';
+import { AddProjectForm } from './components/AddProjectForm/AddProjectForm';
 import { Icon } from '@iconify/react';
 
 export const ProjectsPage = () => {
@@ -18,6 +19,7 @@ export const ProjectsPage = () => {
 	const isLoading = useSelector(selectIsLoading);
 	const [searchPhrase, setSearchPhrase] = useState('');
 	const [shouldSearch, setShouldSearch] = useState(false);
+	const [isAddProject, setIsAddProject] = useState(false);
 
 	useEffect(() => {
 		dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
@@ -62,15 +64,28 @@ export const ProjectsPage = () => {
 						<HeaderAllPage>Проекты</HeaderAllPage>
 					</div>
 
-					<Link to="/projects/create">
-						<div className="flex items-center justify-center w-8 h-8 bg-white rounded-full">
-							<Icon
-								icon="solar:add-circle-bold"
-								className="text-emerald-600 w-full h-full"
-							/>
-						</div>
-					</Link>
+					<button
+						className="flex items-center h-8 px-3 bg-white rounded-full hover:bg-green-50 transition-colors"
+						onClick={() => setIsAddProject(!isAddProject)}
+					>
+						<Icon
+							icon="solar:add-circle-bold"
+							className="text-emerald-600 w-5 h-5 mr-1.5"
+						/>
+						<span className="text-sm font-medium text-gray-700 whitespace-nowrap">
+							Новый проект
+						</span>
+					</button>
 				</div>
+
+				{isAddProject && (
+					<div className="mb-6 animate-in fade-in duration-300">
+						<AddProjectForm
+							setIsAddProject={setIsAddProject}
+							isAddProject={isAddProject}
+						/>
+					</div>
+				)}
 
 				<div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
 					<div className="p-6 border-b border-gray-50 bg-white">

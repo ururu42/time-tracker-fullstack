@@ -35,7 +35,6 @@ router.post("/login", async (req, res) => {
       })
       .status(200)
       .send({ error: null, user });
-    console.log("Ответ отправлен клиенту");
   } catch (e) {
     console.error("Ошибка при логине:", e.message);
     res.status(400).send({ error: e.message || "Unknown error" });

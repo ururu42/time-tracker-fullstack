@@ -38,15 +38,14 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
     if (req.body.removeAvatar === "true") {
       avatarPath = null;
 
-      if (currentUser?.avatar) {
-        const fullPath = path.join(__dirname, "..", currentUser.avatar);
+        if (currentUser?.avatar) {
+          const fullPath = path.join(__dirname, "..", currentUser.avatar);
 
-        fs.unlink(fullPath, (err) => {
-          if (err) {
-            console.log("Ошибка удаления файла:", err);
-          }
-        });
-      }
+          fs.unlink(fullPath, (err) => {
+            if (err) {
+            }
+          });
+        }
     }
 
     const updatedUser = await updateUserById(req.user.id, {

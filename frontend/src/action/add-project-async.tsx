@@ -19,10 +19,11 @@ export const addProjectAsync = (newTitle, newDescription) => {
 			}
 
 			const addProject = await response.json();
-			// console.log('Задача добавлена, ответ от сервера:', addProject);
 			dispatch({ type: ACTION_TYPE.ADD_PROJECT, payload: addProject.data });
+			return addProject.data;
 		} catch (e) {
 			console.error('Server error', e);
+			return null;
 		}
 	};
 };

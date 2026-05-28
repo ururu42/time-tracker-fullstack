@@ -8,7 +8,7 @@ export const ProjectList = ({ projects }) => {
 				projects.map((project) => (
 					<Link
 						to={`/projects/${project.id}`}
-						className="group flex justify-between items-center p-5 bg-white border border-gray-200 rounded-lg hover:border-indigo-300 hover:shadow-md transition-all duration-200"
+						className="group flex justify-between items-center p-5 bg-white border border-gray-200 rounded-lg hover:border-green-400 hover:shadow-md transition-all duration-200"
 						key={project.id}
 					>
 						<div className="flex items-center gap-4 flex-1">
@@ -19,7 +19,7 @@ export const ProjectList = ({ projects }) => {
 								/>
 							</div>
 							<div className="flex flex-col flex-1">
-								<h3 className="font-semibold text-lg text-gray-800 group-hover:text-indigo-600 transition-colors">
+								<h3 className="font-semibold text-lg text-gray-800 group-hover:text-green-600 transition-colors">
 									{project.title}
 								</h3>
 								<p className="text-sm text-gray-500 mt-1 line-clamp-1">
@@ -39,7 +39,7 @@ export const ProjectList = ({ projects }) => {
 							)}
 							<Icon
 								icon="solar:alt-arrow-right-linear"
-								className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all"
+								className="w-5 h-5 text-gray-400 group-hover:text-green-600 group-hover:translate-x-1 transition-all"
 							/>
 						</div>
 					</Link>

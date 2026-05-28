@@ -14,8 +14,6 @@ export const fetchTasksForProject = (projectId) => {
 			}
 
 			const result = await response.json();
-			// console.log('Result from server:', result);
-
 			const tasksPayload = Array.isArray(result) ? result : (result?.data ?? []);
 
 			dispatch({

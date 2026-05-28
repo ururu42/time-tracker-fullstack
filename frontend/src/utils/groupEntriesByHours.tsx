@@ -19,6 +19,7 @@ export const groupEntriesByHours = (entries) => {
 
 	return Object.keys(hoursEndTime).map((date) => ({
 		name: date,
-		hours: Number((hoursEndTime[date] / 3600000).toFixed(1)),
+		hours: hoursEndTime[date] / 3600000,
+		durationMs: hoursEndTime[date],
 	}));
 };

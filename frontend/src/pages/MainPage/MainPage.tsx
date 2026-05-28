@@ -30,6 +30,7 @@ import {
 	TodayTimeEntries,
 	Statistics,
 } from './components';
+import { AddProjectForm } from '../ProjectsPage/components/AddProjectForm/AddProjectForm';
 import { Icon } from '@iconify/react';
 
 export const MainPage = () => {
@@ -51,6 +52,11 @@ export const MainPage = () => {
 	const intervalRef = useRef(null);
 
 	const [saveMessage, setSaveMessage] = useState('');
+
+	const [isAddProject, setIsAddProject] = useState(false);
+	const [dropDownDisabled, setDropDownDisableb] = useState(false);
+
+	const [isAddingTask, setIsAddingTask] = useState(false);
 
 	useEffect(() => {
 		dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
@@ -143,12 +149,15 @@ export const MainPage = () => {
 		stopTimer();
 
 		const endTime = new Date();
-		const durationMs = endTime - startTime;
+
+		const durationMs = elapsedTime;
+
+		const calculatedStartTime = new Date(endTime.getTime() - durationMs);
 
 		dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
 		await dispatch(
 			saveTimeEntryAsync({
-				startTime: startTime.toISOString(),
+				startTime: calculatedStartTime.toISOString(),
 				endTime: endTime.toISOString(),
 				duration: durationMs,
 				taskId: currentTask.id,
@@ -223,17 +232,25 @@ export const MainPage = () => {
 								setSearchQuery={setSearchQuery}
 								setDescriptionTask={setDescriptionTask}
 								placeholder="Выберите проект"
+								disabled={dropDownDisabled}
 							/>
 						</div>
 
-						<Link to="/projects/create">
-							<div className="flex items-center justify-center w-8 h-8 bg-white rounded-full mb-2">
-								<Icon
-									icon="solar:add-circle-bold"
-									className="text-emerald-600 w-full h-full"
-								/>
-							</div>
-						</Link>
+						<button
+							className="flex items-center justify-center h-8 px-3 bg-white rounded-full mb-2"
+							onClick={() => {
+								setIsAddProject(!isAddProject);
+								setDropDownDisableb(!dropDownDisabled);
+							}}
+						>
+							<Icon
+								icon="solar:add-circle-bold"
+								className="text-emerald-600 w-5 h-5 mr-1.5"
+							/>
+							<span className="text-sm font-medium text-gray-700 whitespace-nowrap">
+								Новый проект
+							</span>
+						</button>
 					</div>
 					<Timer
 						elapsedTime={elapsedTime}
@@ -244,7 +261,17 @@ export const MainPage = () => {
 					/>
 				</div>
 
-				{selectedProject && (
+				{isAddProject && (
+					<AddProjectForm
+						setIsAddProject={setIsAddProject}
+						isAddProject={isAddProject}
+						setDropDownDisableb={setDropDownDisableb}
+						dropDownDisabled={dropDownDisabled}
+						setSelectedProject={setSelectedProject}
+					/>
+				)}
+
+				{selectedProject && !isAddProject && (
 					<div className="space-y-4 animate-in fade-in duration-300">
 						<TaskSearchInput
 							selectedProject={selectedProject}
@@ -253,20 +280,19 @@ export const MainPage = () => {
 							setSelectedTask={setSelectedTask}
 							searchQuery={searchQuery}
 							setSearchQuery={setSearchQuery}
-							disabled={!selectedProject}
+							isAddingTask={isAddingTask}
+							setIsAddingTask={setIsAddingTask}
 						/>
 						{selectedTask && (
 							<>
 								<TaskTextarea
 									description={descriptionTask}
 									setDescription={setDescriptionTask}
-									disabled={!selectedProject}
 								/>
 
 								<TrackerComment
 									timerComment={timerComment}
 									setTimerComment={setTimerComment}
-									disabled={!selectedProject}
 								/>
 
 								<TrackerButtons

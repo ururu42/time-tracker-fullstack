@@ -10,9 +10,15 @@ const initialProjectsState = {
 export const projectsReducer = (state = initialProjectsState, action) => {
 	switch (action.type) {
 		case ACTION_TYPE.SET_PROJECTS:
+			// Сортируем по дате создания (новые первыми)
+			const sortedProjects = action.payload
+				? [...action.payload].sort(
+						(a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+					)
+				: [];
 			return {
 				...state,
-				projects: action.payload,
+				projects: sortedProjects,
 			};
 
 		case ACTION_TYPE.DELETE_PROJECT:
@@ -34,7 +40,7 @@ export const projectsReducer = (state = initialProjectsState, action) => {
 		case ACTION_TYPE.ADD_PROJECT:
 			return {
 				...state,
-				projects: [...state.projects, action.payload],
+				projects: [action.payload, ...state.projects],
 			};
 
 		case ACTION_TYPE.SET_CURRENT_PROJECT:

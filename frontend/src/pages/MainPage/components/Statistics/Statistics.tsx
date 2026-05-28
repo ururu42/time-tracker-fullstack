@@ -27,7 +27,7 @@ export const Statistics = () => {
 	return (
 		<div className="col-span-1">
 			<h2 className="text-lg font-semibold text-gray-900 mb-4 ml-4">Статистика</h2>
-			<div className="p-6 bg-white rounded-2xl border border-gray-200 shadow-sm text-center">
+			<div className="p-6 bg-white rounded-2xl border border-gray-200 shadow-sm text-center mb-4">
 				<div className="flex justify-center mb-2">
 					<Icon
 						icon="solar:clock-circle-bold"
@@ -38,7 +38,7 @@ export const Statistics = () => {
 				<p className="text-sm text-gray-500 mb-1">Всего за день</p>
 
 				<p className="text-4xl font-bold text-gray-900 tracking-tight">
-					{formatTimeFromMs(totalDuration, true)}
+					{formatTimeFromMs(totalDuration)}
 				</p>
 			</div>
 			<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">

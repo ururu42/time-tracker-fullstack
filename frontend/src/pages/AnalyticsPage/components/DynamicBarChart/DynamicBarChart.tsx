@@ -8,13 +8,14 @@ import {
 	Bar,
 	Cell,
 } from 'recharts';
-export const DymanicBarChart = ({ chartData }) => {
-	const COLORS = [
-		'#3f6ad8', // Насыщенный синий
-		'#56ccf2', // Небесный
-		'#44a0e7', // Ярко-голубой
-		'#ec4899', // Ярко-розовый
-	];
+import { formatTimeFromMs } from '../../../../utils';
+	export const DymanicBarChart = ({ chartData }: { chartData: any[] }) => {
+		const COLORS = [
+			'#3f6ad8',
+			'#56ccf2',
+			'#44a0e7',
+			'#ec4899',
+		];
 
 	return (
 		<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4 w-full">
@@ -41,7 +42,7 @@ export const DymanicBarChart = ({ chartData }) => {
 								axisLine={false}
 								tickLine={false}
 								tick={{ fill: '#9ea2a7', fontSize: 12 }}
-								interval="preserveStartEnd" // Показывает все подписи
+								interval="preserveStartEnd"
 								dy={10}
 							/>
 
@@ -60,13 +61,32 @@ export const DymanicBarChart = ({ chartData }) => {
 									border: 'none',
 									boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
 								}}
+								formatter={(value, name, props) => {
+									const totalMs =
+										props.payload.durationMs !== undefined
+											? props.payload.durationMs
+											: Math.round(Number(value) * 3600000);
+
+									return [
+										formatTimeFromMs(totalMs),
+										'Затрачено времени',
+									];
+								}}
 							/>
 
-							<Bar dataKey="hours" barSize={32} radius={[6, 6, 0, 0]}>
-								{chartData.map((entry, index) => (
+							<Bar
+								dataKey="hours"
+								barSize={32}
+								radius={[6, 6, 0, 0]}
+								background={{ fill: 'transparent' }}
+							>
+								{chartData.map((entry: any, index: number) => (
 									<Cell
 										key={`cell-${index}`}
 										fill={COLORS[index % COLORS.length]}
+										style={{ 
+											opacity: entry.hours === 0 ? 0.001 : 1,
+										}}
 									/>
 								))}
 							</Bar>

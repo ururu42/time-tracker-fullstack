@@ -62,7 +62,7 @@ export const TodayTimeEntryCard = ({ todayTimeEntries, onClick, isPlayTracker })
 									</div>
 									<div className="flex items-center gap-3">
 										<span className="text-sm font-semibold text-gray-700 min-w-[60px] text-right">
-											{formatTimeFromMs(entry.duration, true)}
+											{formatTimeFromMs(entry.duration)}
 										</span>
 
 										<button

@@ -20,8 +20,6 @@ import {
 } from 'recharts';
 import { COLORS } from '../../../../constants';
 
-const OTHER_COLOR = '#94a3b8'; // Нейтральный серый (slate-400)
-
 export const ProjectDistribution = ({
 	selectedPeriod,
 	selectedProject,
@@ -101,7 +99,7 @@ export const ProjectDistribution = ({
 					<ResponsiveContainer width="100%" height="100%">
 						<PieChart>
 							<Pie
-								data={statsWithPercent} // ИСПОЛЬЗУЕМ СГРУППИРОВАННЫЕ ДАННЫЕ
+								data={statsWithPercent} 
 								dataKey="totalDuration"
 								nameKey="projectTitle"
 								cx="50%"
@@ -112,7 +110,6 @@ export const ProjectDistribution = ({
 								cornerRadius={4}
 								stroke="none"
 							>
-								{/* ДОБАВЛЯЕМ ЦВЕТА ДЛЯ СЕГМЕНТОВ */}
 								{statsWithPercent.map((entry, index) => (
 									<Cell
 										key={`cell-${index}`}

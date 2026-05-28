@@ -40,11 +40,6 @@ async function login(login, password) {
   return { user: mapUser(user), token };
 }
 
-// async function getUsers() {
-//   const users = await User.find().select("-password");
-//   return users.map(mapUser);
-// }
-
 async function getUserById(id) {
   const user = await User.findById(id).select("-password");
   return user ? mapUser(user) : null;
@@ -94,19 +89,10 @@ async function deleteUser(id) {
   return deletedUser.deletedCount > 0;
 }
 
-// async function getRoles() {
-//   return [
-//     { id: ROLES.ADMIN, name: "Admin" },
-//     { id: ROLES.USER, name: "User" },
-//   ];
-// }
-
 module.exports = {
   register,
   login,
-  // getUsers,
   getUserById,
   updateUserById,
   deleteUser,
-  // getRoles,
 };

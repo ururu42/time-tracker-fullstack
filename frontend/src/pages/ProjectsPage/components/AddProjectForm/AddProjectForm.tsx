@@ -1,31 +1,60 @@
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { GoBackButton } from '../../../../components';
 import { useState } from 'react';
 import { addProjectAsync } from '../../../../action';
 import { Form } from '../../../../components';
 
-export const AddProjectForm = () => {
-	const navigate = useNavigate();
+interface AddProjectFormProps {
+	setIsAddProject: (val: boolean) => void;
+	isAddProject: boolean;
+	setDropDownDisableb?: (val: boolean) => void;
+	dropDownDisabled?: boolean;
+	setSelectedProject?: (id: any) => void;
+}
+
+export const AddProjectForm = ({
+	setIsAddProject,
+	isAddProject,
+	setDropDownDisableb,
+	dropDownDisabled,
+	setSelectedProject,
+}: AddProjectFormProps) => {
 	const dispatch = useDispatch();
 
 	const [newTitle, setNewTitle] = useState('');
 	const [newDescription, setNewDescription] = useState('');
 
-	const handleSubmit = () => {
-		dispatch(addProjectAsync(newTitle, newDescription));
-		navigate('/projects');
+	const handleSubmit = async () => {
+		const newProject = await dispatch(addProjectAsync(newTitle, newDescription));
+		if (newProject) {
+			if (setSelectedProject) {
+				setSelectedProject(newProject.id);
+			}
+		}
+		if (setDropDownDisableb && dropDownDisabled !== undefined) {
+			setDropDownDisableb(!dropDownDisabled);
+		}
+		setNewTitle('');
+		setNewDescription('');
+		setIsAddProject(false);
+	};
+
+	const onCancel = () => {
+		setNewTitle('');
+		setNewDescription('');
+		if (setDropDownDisableb && dropDownDisabled !== undefined) {
+			setDropDownDisableb(!dropDownDisabled);
+		}
+		setIsAddProject(false);
 	};
 	return (
-		<div className="">
-			<GoBackButton onClick={() => navigate(-1)} />
+		<div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
 			<Form
 				title={newTitle}
 				description={newDescription}
 				onTitleChange={setNewTitle}
 				onDescriptionChange={setNewDescription}
 				onSubmit={handleSubmit}
-				onCancel={() => navigate(-1)}
+				onCancel={onCancel}
 				titleLabel="Название проекта"
 				descriptionLabel="Описание проекта"
 				titlePlaceholder="Введите название проекта"

@@ -27,6 +27,7 @@ export const groupEntriesByDay = (entries, startDate, endDate) => {
 
 	return Object.keys(daysEndHours).map((date) => ({
 		name: date,
-		hours: parseFloat(daysEndHours[date] / 3600000).toFixed(1),
+		hours: daysEndHours[date] / 3600000,
+		durationMs: daysEndHours[date],
 	}));
 };

@@ -3,7 +3,7 @@ export const Button = ({ disabled, className = '', children, ...props }) => {
 		<button
 			{...props}
 			disabled={disabled}
-			className={`px-4 py-2 rounded-full bg-blue-500 text-white 
+			className={`px-4 py-2 rounded-lg bg-blue-500 text-white 
         ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600 cursor-pointer'}
         ${className}`}
 		>
