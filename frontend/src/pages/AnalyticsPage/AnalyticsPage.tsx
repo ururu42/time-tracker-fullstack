@@ -88,13 +88,12 @@ export const AnalyticsPage = () => {
 				setSelectedProject={setSelectedProject}
 				selectedProject={selectedProject}
 			/>
-			<div className="flex items-start w-full gap-6">
-				<div className="flex-shrink-0 w-[400px]">
+			<div className="flex flex-col lg:flex-row w-full gap-6 mb-4">
+				<div className="w-full lg:w-[450px] flex-shrink-0">
 					<ProjectDistribution
 						selectedPeriod={selectedPeriod}
 						selectedProject={selectedProject}
 						customDateRange={customDateRange}
-						projects={projects}
 					/>
 				</div>
 				<div className="w-full min-w-0">

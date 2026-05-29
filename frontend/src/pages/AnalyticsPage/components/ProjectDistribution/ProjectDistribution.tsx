@@ -88,69 +88,96 @@ export const ProjectDistribution = ({
 	}, [timeEntries, selectedPeriod, customDateRange, selectedProject]);
 
 	return (
-		<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
+		<div
+			className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6"
+			style={{ height: '580px' }}
+		>
 			<div className="text-slate-700 font-bold mb-4 ml-2 text-sm uppercase tracking-tight">
 				Распределение времени по проектам
 			</div>
-			<div className="w-full h-[400px] bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+			<div className="w-full bg-white p-4 rounded-xl shadow-sm border border-slate-200 h-[calc(100%-36px)] flex flex-col">
 				{statsWithPercent.length === 0 ? (
 					<div>Нет данных за выбранный период</div>
 				) : (
-					<ResponsiveContainer width="100%" height="100%">
-						<PieChart>
-							<Pie
-								data={statsWithPercent} 
-								dataKey="totalDuration"
-								nameKey="projectTitle"
-								cx="50%"
-								cy="50%"
-								innerRadius={60}
-								outerRadius={100}
-								paddingAngle={3}
-								cornerRadius={4}
-								stroke="none"
-							>
+					<>
+						<div className="w-full flex-shrink-0">
+							<div className="w-full aspect-square max-h-[350px]">
+								<ResponsiveContainer width="100%" height="100%">
+									<PieChart>
+										<Pie
+											data={statsWithPercent}
+											dataKey="totalDuration"
+											nameKey="projectTitle"
+											cx="50%"
+											cy="50%"
+											innerRadius={55}
+											outerRadius={90}
+											paddingAngle={3}
+											cornerRadius={4}
+											stroke="none"
+										>
+											{statsWithPercent.map((entry, index) => (
+												<Cell
+													key={`cell-${index}`}
+													fill={COLORS[index % COLORS.length]}
+												/>
+											))}
+											<Label
+												value={formatTimeFromMs(totalDuration)}
+												position="center"
+												className="fill-slate-800 font-bold text-xl"
+												style={{
+													fontSize: '18px',
+													fontWeight: 'bold',
+													fill: '#1e293b',
+												}}
+											/>
+										</Pie>
+
+										<Tooltip
+											contentStyle={{
+												borderRadius: '12px',
+												border: 'none',
+												boxShadow:
+													'0 10px 15px -3px rgba(0,0,0,0.1)',
+											}}
+											formatter={(value, name) => [
+												`${Math.round(value / 60000)} мин`,
+												name,
+											]}
+										/>
+									</PieChart>
+								</ResponsiveContainer>
+							</div>
+						</div>
+
+						{/* Легенда с прокруткой */}
+						<div className="mt-4 flex-1 overflow-y-auto pr-2 custom-scrollbar min-h-0">
+							<div className="space-y-2">
 								{statsWithPercent.map((entry, index) => (
-									<Cell
-										key={`cell-${index}`}
-										fill={COLORS[index % COLORS.length]}
-									/>
+									<div
+										key={`legend-${entry.projectId}`}
+										className="flex items-center gap-2 text-sm"
+										title={entry.projectTitle}
+									>
+										<div
+											className="w-3 h-3 rounded-full flex-shrink-0"
+											style={{
+												backgroundColor:
+													COLORS[index % COLORS.length],
+											}}
+										/>
+										<span className="text-slate-600 font-medium truncate flex-1">
+											{entry.projectTitle}
+										</span>
+										<span className="text-slate-400 text-xs flex-shrink-0">
+											{formatTimeFromMs(entry.totalDuration)}
+										</span>
+									</div>
 								))}
-								<Label
-									value={formatTimeFromMs(totalDuration)}
-									position="center"
-									className="fill-slate-800 font-bold text-xl"
-									style={{
-										fontSize: '20px',
-										fontWeight: 'bold',
-										fill: '#1e293b',
-									}}
-								/>
-							</Pie>
-
-							<Tooltip
-								contentStyle={{
-									borderRadius: '12px',
-									border: 'none',
-									boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
-								}}
-								formatter={(value) => [
-									`${Math.round(value / 60000)} мин`,
-									'Время',
-								]}
-							/>
-
-							<Legend
-								verticalAlign="bottom"
-								iconType="circle"
-								formatter={(value) => (
-									<span className="text-slate-600 text-sm font-medium">
-										{value}
-									</span>
-								)}
-							/>
-						</PieChart>
-					</ResponsiveContainer>
+							</div>
+						</div>
+					</>
 				)}
 			</div>
 		</div>

@@ -9,22 +9,17 @@ import {
 	Cell,
 } from 'recharts';
 import { formatTimeFromMs } from '../../../../utils';
-	export const DymanicBarChart = ({ chartData }: { chartData: any[] }) => {
-		const COLORS = [
-			'#3f6ad8',
-			'#56ccf2',
-			'#44a0e7',
-			'#ec4899',
-		];
+export const DymanicBarChart = ({ chartData }: { chartData: any[] }) => {
+	const COLORS = ['#3f6ad8', '#56ccf2', '#44a0e7', '#ec4899'];
 
 	return (
-		<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4 w-full">
+		<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4 w-full h-full flex flex-col">
 			{chartData.length === 0 ? (
-				<div className="flex items-center justify-center h-[300px] text-gray-400">
+				<div className="flex items-center justify-center flex-1 min-h-[300px] text-gray-400">
 					Нет данных за выбранный период
 				</div>
 			) : (
-				<div style={{ width: '100%', height: 400 }}>
+				<div className="w-full flex-1">
 					<ResponsiveContainer width="100%" height="100%">
 						<BarChart
 							data={chartData}
@@ -84,7 +79,7 @@ import { formatTimeFromMs } from '../../../../utils';
 									<Cell
 										key={`cell-${index}`}
 										fill={COLORS[index % COLORS.length]}
-										style={{ 
+										style={{
 											opacity: entry.hours === 0 ? 0.001 : 1,
 										}}
 									/>
