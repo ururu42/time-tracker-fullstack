@@ -211,15 +211,15 @@ export const MainPage = () => {
 	};
 
 	return (
-		<main className=" flex-1 p-6 min-h-screen bg-gray-50 ">
+		<main className=" flex-1 min-h-screen bg-gray-50 ">
 			{isLoading && <Loader />}
 
-			<HeaderAllPage children={`Привет ${user.name}!`} />
+			<HeaderAllPage children={`Привет, ${user.name}!`} />
 
 			<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
-				<div className="flex items-end justify-between mb-6 gap-6">
-					<div className="flex items-end gap-3 flex-grow max-w-2xl">
-						<div className="w-64 flex-shrink-0">
+				<div className="flex flex-col lg:flex-row items-start lg:items-end justify-between mb-6 gap-4">
+					<div className="flex flex-col lg:flex-row items-start lg:items-end gap-3 flex-grow w-full lg:max-w-2xl">
+						<div className="w-full lg:w-64 flex-shrink-0">
 							<label className="block text-sm font-medium text-gray-700 mb-2">
 								Выбор проекта
 							</label>
@@ -307,9 +307,9 @@ export const MainPage = () => {
 				)}
 			</div>
 
-			<div className="grid grid-cols-3 gap-3">
+			<div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 				{saveMessage && (
-					<div className="col-span-3 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl mb-2 shadow-sm flex items-center gap-2">
+					<div className="col-span-1 lg:col-span-3 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl mb-2 shadow-sm flex items-center gap-2">
 						<Icon
 							icon="solar:check-circle-bold"
 							className="w-5 h-5 text-green-500"

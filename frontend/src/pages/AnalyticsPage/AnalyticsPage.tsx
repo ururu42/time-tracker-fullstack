@@ -77,7 +77,7 @@ export const AnalyticsPage = () => {
 	}, [timeEntries, selectedPeriod, selectedProject, customDateRange]);
 
 	return (
-		<main className=" flex-1 p-6 min-h-screen bg-gray-50 ">
+		<main className=" flex-1 min-h-screen bg-gray-50 ">
 			{isLoading && <Loader />}
 			<HeaderAllPage children={'Отчеты'} />
 			<HeaderAnalytics

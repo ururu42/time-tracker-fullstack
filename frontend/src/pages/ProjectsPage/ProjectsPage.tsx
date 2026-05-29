@@ -50,12 +50,12 @@ export const ProjectsPage = () => {
 	};
 
 	return (
-		<main className="flex-1 p-6 overflow-auto bg-[#f9fafb]">
+		<main className="flex-1  overflow-auto bg-[#f9fafb]">
 			{isLoading && <Loader />}
 			<div className="max-w-6xl mx-auto">
 				<div className="flex items-center justify-between mb-8">
 					<div className="flex items-center gap-3">
-						<div className="p-2 bg-green-800 rounded-lg shadow-sm">
+						<div className="p-2 bg-green-800 rounded-lg shadow-sm mb-4">
 							<Icon
 								icon="solar:widget-2-bold"
 								className="w-6 h-6 text-white"

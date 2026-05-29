@@ -15,7 +15,7 @@ export const SettingsPage = () => {
 	const avatarSrc = removeAvatar ? null : previewUrl || user.avatar;
 
 	return (
-		<main className=" flex-1 p-6 min-h-screen bg-gray-50 ">
+		<main className=" flex-1 min-h-screen bg-gray-50 ">
 			<HeaderAllPage>Настройки аккаунта</HeaderAllPage>
 			<div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
 				<p className="text-gray-600">Вы вошли как</p>

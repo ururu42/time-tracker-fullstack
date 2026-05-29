@@ -13,7 +13,7 @@ export const TodayTimeEntries = ({ onClick, isPlayTracker }) => {
 	}, []);
 
 	return (
-		<div className="col-span-2">
+		<div className="col-span-1 lg:col-span-2">
 			<h2 className="text-lg font-semibold text-gray-900 mb-4 ml-4">
 				Записи за сегодня
 			</h2>
