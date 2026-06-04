@@ -12,7 +12,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://time-tracker-client-8ayj.onrender.com",
+    origin: [
+      "http://localhost:5173",
+      "https://time-tracker-client-8ayj.onrender.com",
+    ],
     credentials: true,
   }),
 );
