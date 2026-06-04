@@ -53,3 +53,20 @@ export default defineConfig({
 // 			// и другие, если нужно
 // 		},
 // 	},
+
+// server: {
+// 		proxy: {
+// 			'/api': 'http://localhost:3001',
+// 			'/auth': 'http://localhost:3001',
+// 			'/project': 'http://localhost:3001',
+// 			'/time': 'http://localhost:3001',
+// 			'/user': 'http://localhost:3001',
+// 			'/uploads': {
+// 				target: 'http://localhost:3001',
+// 				changeOrigin: true,
+// 				secure: false,
+// 			},
+
+// 			// и другие, если нужно
+// 		},
+// 	},
