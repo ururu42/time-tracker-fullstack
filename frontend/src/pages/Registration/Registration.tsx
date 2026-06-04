@@ -61,8 +61,8 @@ export const Registration = () => {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					credentials: 'include',
 				},
+				credentials: 'include',
 				body: JSON.stringify({ login, password }),
 			});
 
