@@ -83,13 +83,13 @@ export const AnalyticsPage = () => {
 			<HeaderAnalytics
 				period={selectedPeriod}
 				onPeriodClick={handlePeriodChange}
-				onCustomDateChange={setCustomDateRange}
+				setCustomDateRange={setCustomDateRange}
 				projectOption={projectOption}
 				setSelectedProject={setSelectedProject}
 				selectedProject={selectedProject}
 			/>
 			<div className="flex flex-col lg:flex-row w-full gap-6 mb-4">
-				<div className="w-full lg:w-[450px] flex-shrink-0">
+				<div className="w-full lg:w-[450px] lg:flex-shrink-0 min-w-0">
 					<ProjectDistribution
 						selectedPeriod={selectedPeriod}
 						selectedProject={selectedProject}

@@ -27,7 +27,7 @@ export const getChartData = (
 
 		chartData = stats.map((item) => ({
 			name: item.projectTitle,
-			hours: (item.totalDuration / 3600000),
+			hours: item.totalDuration / 3600000,
 			durationMs: item.totalDuration,
 		}));
 	}

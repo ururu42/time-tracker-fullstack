@@ -1,8 +1,6 @@
-import { useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '../../selectors';
-import { UserPanel } from '../UserPanel/UserPanel';
 import { ACTION_TYPE } from '../../action';
 import { Icon } from '@iconify/react';
 
