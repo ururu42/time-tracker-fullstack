@@ -7,8 +7,12 @@ import {
 	fetchProjects,
 	fetchTasksForProject,
 	updateTaskAsync,
-	saveTimeEntryAsync,
 	ACTION_TYPE,
+	startTimerSessionAsync,
+	fetchActiveTimerAsync,
+	finishTimerSessionAsync,
+	cancelTimerSessionAsync,
+	updateTimerSessionCommentAsync,
 } from '../../action';
 import {
 	selectProjects,
@@ -32,6 +36,7 @@ import {
 } from './components';
 import { AddProjectForm } from '../ProjectsPage/components/AddProjectForm/AddProjectForm';
 import { Icon } from '@iconify/react';
+import { API_URL } from '../../config';
 
 export const MainPage = () => {
 	const dispatch = useDispatch();
@@ -46,10 +51,9 @@ export const MainPage = () => {
 	const [descriptionTask, setDescriptionTask] = useState('');
 	const [timerComment, setTimerComment] = useState('');
 
-	const [elapsedTime, setElapsedTime] = useState(0);
-	const [isRunning, setIsRunning] = useState(false);
-	const [startTime, setStartTime] = useState(null);
-	const intervalRef = useRef(null);
+	const [activeSession, setActiveSession] = useState(null);
+	const [serverOffset, setServerOffset] = useState(0);
+	const [now, setNow] = useState(Date.now());
 
 	const [saveMessage, setSaveMessage] = useState('');
 
@@ -57,6 +61,22 @@ export const MainPage = () => {
 	const [dropDownDisabled, setDropDownDisableb] = useState(false);
 
 	const [isAddingTask, setIsAddingTask] = useState(false);
+
+	const isRunning = !!activeSession;
+
+	const activeSessionRef = useRef(null);
+	useEffect(() => {
+		activeSessionRef.current = activeSession;
+	}, [activeSession]);
+
+	const timerCommentRef = useRef('');
+	useEffect(() => {
+		timerCommentRef.current = timerComment;
+	}, [timerComment]);
+
+	const elapsedMs = activeSession
+		? Math.max(0, now + serverOffset - new Date(activeSession.startTime).getTime())
+		: 0;
 
 	useEffect(() => {
 		dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
@@ -78,22 +98,114 @@ export const MainPage = () => {
 		label: project.title,
 	}));
 
-	const startTimer = () => {
-		setIsRunning(true);
-		setStartTime(new Date());
-		intervalRef.current = setInterval(() => {
-			setElapsedTime((prev) => prev + 1000);
-		}, 1000);
-	};
-
-	const stopTimer = () => {
-		clearInterval(intervalRef.current);
-		setIsRunning(false);
-	};
-
+	// «Часы» таймера: тик раз в секунду только обновляет отображение.
+	// Фактическое время всегда считается как now - startTime (штамп сервера),
+	// поэтому отсчёт не сбивается, даже если вкладка в фоновом режиме
+	// или браузер находится на других сайтах.
 	useEffect(() => {
-		return () => clearInterval(intervalRef.current);
+		if (!activeSession) return;
+		setNow(Date.now());
+		const id = setInterval(() => setNow(Date.now()), 1000);
+		return () => clearInterval(id);
+	}, [activeSession]);
+
+	// Восстановление таймера, который идёт на сервере (после F5 / reopening страницы)
+	useEffect(() => {
+		let cancelled = false;
+
+		const restore = async () => {
+			const result = await dispatch(fetchActiveTimerAsync());
+			if (cancelled || !result?.session) return;
+
+			const session = result.session;
+			setServerOffset(new Date(result.serverTime).getTime() - Date.now());
+			setActiveSession(session);
+			setTimerComment(session.comment || '');
+			setSelectedProject(session.projectId);
+			setSearchQuery(session.taskTitle);
+		};
+
+		restore();
+		return () => {
+			cancelled = true;
+		};
+	}, [dispatch]);
+
+	// Подцепить выбранную задачу, как только загрузятся задачи проекта
+	useEffect(() => {
+		if (activeSession && tasks.byId?.[activeSession.taskId]) {
+			setSelectedTask(tasks.byId[activeSession.taskId]);
+		}
+	}, [activeSession, tasks]);
+
+	// Синхронизация комментария на сервере, пока идёт таймер
+	useEffect(() => {
+		if (!activeSession) return;
+		const id = setTimeout(() => {
+			dispatch(updateTimerSessionCommentAsync({ comment: timerComment }));
+		}, 1000);
+		return () => clearTimeout(id);
+	}, [dispatch, timerComment, activeSession]);
+
+	// Автосейв: закрытие вкладки / браузера / обновление страницы →
+	// сессия сохраняется на сервере (дублирующий вызов безопасен: finish атомарный)
+	useEffect(() => {
+		const finishOnUnload = () => {
+			if (!activeSessionRef.current) return;
+
+			fetch(`${API_URL}/api/timer/finish`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json;charset=utf-8' },
+				credentials: 'include',
+				keepalive: true,
+				body: JSON.stringify({ comment: timerCommentRef.current }),
+			}).catch(() => {});
+		};
+
+		window.addEventListener('beforeunload', finishOnUnload);
+		window.addEventListener('pagehide', finishOnUnload);
+		return () => {
+			window.removeEventListener('beforeunload', finishOnUnload);
+			window.removeEventListener('pagehide', finishOnUnload);
+		};
 	}, []);
+
+	const startTimer = async () => {
+		if (activeSession) {
+			setSaveMessage('Таймер уже идёт');
+			return;
+		}
+
+		const task = await getOrCreateTask();
+		if (!task) return;
+
+		dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
+		const result = await dispatch(
+			startTimerSessionAsync({ taskId: task.id, comment: timerComment }),
+		);
+		dispatch({ type: ACTION_TYPE.SET_LOADING, payload: false });
+
+		if (result?.status === 'ALREADY_RUNNING') {
+			setSaveMessage('Таймер уже идёт');
+			const current = await dispatch(fetchActiveTimerAsync());
+			if (current?.session) {
+				setServerOffset(new Date(current.serverTime).getTime() - Date.now());
+				setActiveSession(current.session);
+				setTimerComment(current.session.comment || '');
+				setSelectedProject(current.session.projectId);
+				setSearchQuery(current.session.taskTitle);
+			}
+			return;
+		}
+
+		if (result?.status === 'OK' && result.session) {
+			setServerOffset(new Date(result.serverTime).getTime() - Date.now());
+			setActiveSession(result.session);
+			return;
+		}
+
+		setSaveMessage('Не удалось запустить таймер. Попробуйте ещё раз.');
+	};
 
 	useEffect(() => {
 		if (saveMessage) {
@@ -142,38 +254,9 @@ export const MainPage = () => {
 		}
 	};
 
-	const saveTimerEntry = async () => {
-		const currentTask = await getOrCreateTask();
-		if (!currentTask) return;
-
-		stopTimer();
-
-		const endTime = new Date();
-
-		const durationMs = elapsedTime;
-
-		const calculatedStartTime = new Date(endTime.getTime() - durationMs);
-
-		dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
-		await dispatch(
-			saveTimeEntryAsync({
-				startTime: calculatedStartTime.toISOString(),
-				endTime: endTime.toISOString(),
-				duration: durationMs,
-				taskId: currentTask.id,
-				comment: timerComment,
-			}),
-		);
-
-		const projectObj = projects.find((p) => p.id === selectedProject);
-
-		setSaveMessage(
-			`Данные по задаче и времени сохранены в Проект ${projectObj.title}`,
-		);
-
-		setElapsedTime(0);
-		setIsRunning(false);
-		setStartTime(null);
+	const resetTimerUI = () => {
+		setActiveSession(null);
+		setServerOffset(0);
 		setTimerComment('');
 		setSelectedProject('');
 		setSelectedTask(null);
@@ -181,15 +264,41 @@ export const MainPage = () => {
 		setDescriptionTask('');
 	};
 
+	const saveTimerEntry = async () => {
+		if (!activeSession) return;
+
+		// Синхронизируем описание задачи, если оно изменилось
+		const currentTask = tasks.byId?.[activeSession.taskId];
+		if (currentTask && currentTask.description !== descriptionTask) {
+			dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
+			await dispatch(updateTaskAsync(currentTask.id, { description: descriptionTask }));
+		}
+
+		dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
+		const entry = await dispatch(finishTimerSessionAsync({ comment: timerComment }));
+		dispatch({ type: ACTION_TYPE.SET_LOADING, payload: false });
+
+		if (!entry) {
+			setSaveMessage('Не удалось сохранить таймер. Попробуйте ещё раз.');
+			return;
+		}
+
+		const projectTitle =
+			projects.find((p) => p.id === activeSession.projectId)?.title ||
+			activeSession.projectTitle ||
+			'проект';
+
+		setSaveMessage(`Данные по задаче и времени сохранены в Проект ${projectTitle}`);
+		resetTimerUI();
+	};
+
 	const onCancelAll = () => {
-		setElapsedTime(0);
-		setIsRunning(false);
-		setStartTime(null);
-		setTimerComment('');
-		setSelectedProject('');
-		setSelectedTask(null);
-		setSearchQuery('');
-		setDescriptionTask('');
+		if (!activeSession) return;
+
+		if (!confirm('Отменить таймер? Набранное время будет удалено.')) return;
+
+		dispatch(cancelTimerSessionAsync());
+		resetTimerUI();
 	};
 
 	const onPlayEntry = async (projectId, taskId, comment) => {
@@ -207,7 +316,7 @@ export const MainPage = () => {
 		setTimerComment(comment);
 		setDescriptionTask(currentTask?.description || '');
 
-		startTimer();
+		await startTimer();
 	};
 
 	return (
@@ -253,10 +362,9 @@ export const MainPage = () => {
 						</button>
 					</div>
 					<Timer
-						elapsedTime={elapsedTime}
+						elapsedTime={elapsedMs}
 						isRunning={isRunning}
 						startTimer={startTimer}
-						stopTimer={stopTimer}
 						disabled={!selectedProject || (!selectedTask && !searchQuery)}
 					/>
 				</div>
@@ -298,7 +406,7 @@ export const MainPage = () => {
 								<TrackerButtons
 									onSaveTimerEntryWithAll={saveTimerEntry}
 									isRunning={isRunning}
-									elapsedTime={elapsedTime}
+									elapsedTime={elapsedMs}
 									onCancel={onCancelAll}
 								/>
 							</>

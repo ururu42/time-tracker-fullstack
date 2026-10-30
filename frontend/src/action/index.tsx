@@ -14,3 +14,4 @@ export * from './fetch-time-entries-async';
 export * from './update-task-comment-async';
 export * from './remove-time-entries-async';
 export * from './update-project-async';
+export * from './timer-session-async';

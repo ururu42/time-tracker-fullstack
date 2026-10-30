@@ -8,7 +8,7 @@ export const TrackerButtons = ({
 	onCancel,
 	...props
 }) => {
-	const isDisabled = isRunning || elapsedTime === 0;
+	const isDisabled = !isRunning || elapsedTime === 0;
 
 	return (
 		<div className="flex gap-4 mt-4">

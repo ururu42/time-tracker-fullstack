@@ -5,6 +5,7 @@ const router = express.Router({ mergeParams: true });
 router.use("/auth", require("./auth"));
 router.use("/project", require("./projects"));
 router.use("/time", require("./time"));
+router.use("/timer", require("./timer"));
 router.use("/user", require("./user"));
 router.use("/tasks", require("./tasks"));
 
