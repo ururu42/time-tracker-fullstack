@@ -264,6 +264,31 @@ export const MainPage = () => {
 		setDescriptionTask('');
 	};
 
+	const stopTimerKeepState = async () => {
+		if (!activeSession) return;
+
+		// Синхронизируем описание задачи, если оно изменилось
+		const currentTask = tasks.byId?.[activeSession.taskId];
+		if (currentTask && currentTask.description !== descriptionTask) {
+			dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
+			await dispatch(updateTaskAsync(currentTask.id, { description: descriptionTask }));
+		}
+
+		dispatch({ type: ACTION_TYPE.SET_LOADING, payload: true });
+		const entry = await dispatch(finishTimerSessionAsync({ comment: timerComment }));
+		dispatch({ type: ACTION_TYPE.SET_LOADING, payload: false });
+
+		if (!entry) {
+			setSaveMessage('Не удалось остановить таймер. Попробуйте ещё раз.');
+			return;
+		}
+
+		// Останавливаем таймер, но НЕ сбрасываем выбор проекта/задачи/описания/комментария
+		setActiveSession(null);
+		setServerOffset(0);
+		setSaveMessage('Таймер остановлен. Можно продолжить с той же секунды.');
+	};
+
 	const saveTimerEntry = async () => {
 		if (!activeSession) return;
 
@@ -365,7 +390,7 @@ export const MainPage = () => {
 						elapsedTime={elapsedMs}
 						isRunning={isRunning}
 						startTimer={startTimer}
-						onStopTimer={saveTimerEntry}
+						onStopTimer={stopTimerKeepState}
 						disabled={!selectedProject || (!selectedTask && !searchQuery)}
 					/>
 				</div>
