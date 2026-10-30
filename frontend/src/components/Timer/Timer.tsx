@@ -1,7 +1,13 @@
 import { Icon } from '@iconify/react';
 import { formatTimeFromMs } from '../../utils';
 
-export const Timer = ({ elapsedTime, isRunning, startTimer, disabled }) => {
+export const Timer = ({
+	elapsedTime,
+	isRunning,
+	startTimer,
+	onStopTimer,
+	disabled,
+}) => {
 	return (
 		<div className="flex items-center gap-4">
 			<div className="text-4xl font-mono font-semibold text-gray-800">
@@ -9,13 +15,18 @@ export const Timer = ({ elapsedTime, isRunning, startTimer, disabled }) => {
 			</div>
 
 			{isRunning ? (
-				<div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg">
+				<button
+					type="button"
+					title="Остановить и сохранить таймер"
+					onClick={onStopTimer}
+					className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg cursor-pointer hover:bg-red-100 hover:shadow-sm transition-all duration-200"
+				>
 					<span className="relative flex h-3 w-3">
 						<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
 						<span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
 					</span>
 					<span className="text-sm font-medium whitespace-nowrap">Таймер идёт</span>
-				</div>
+				</button>
 			) : (
 				<button
 					className={`flex items-center gap-2 bg-indigo-900 hover:bg-indigo-800 text-white px-6 py-3 rounded-lg font-medium transition-colors ${

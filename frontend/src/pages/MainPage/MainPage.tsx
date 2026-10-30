@@ -365,6 +365,7 @@ export const MainPage = () => {
 						elapsedTime={elapsedMs}
 						isRunning={isRunning}
 						startTimer={startTimer}
+						onStopTimer={saveTimerEntry}
 						disabled={!selectedProject || (!selectedTask && !searchQuery)}
 					/>
 				</div>
